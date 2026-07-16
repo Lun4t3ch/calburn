@@ -18,18 +18,25 @@
   --color-tef: #7c3aed;
   --color-eat: #d97706;
 
-  /* Ambient backdrop */
-  --color-bg: #eef0ec;
-  --glow-a: rgba(13, 148, 136, 0.2);
-  --glow-b: rgba(245, 158, 11, 0.16);
-  --glow-c: rgba(56, 189, 248, 0.14);
+  /* Ambient backdrop — strong enough that the glass visibly refracts it */
+  --color-bg: #e9ece6;
+  --glow-a: rgba(13, 148, 136, 0.5);
+  --glow-b: rgba(245, 158, 11, 0.4);
+  --glow-c: rgba(56, 189, 248, 0.38);
+  --glow-d: rgba(167, 139, 250, 0.28);
 
   /* Glass surfaces */
-  --glass-surface: rgba(255, 255, 255, 0.58);
-  --glass-border: rgba(255, 255, 255, 0.75);
-  --glass-blur: blur(22px) saturate(150%);
+  --glass-surface: rgba(255, 255, 255, 0.38);
+  --glass-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.42),
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0.16)
+  );
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-blur: blur(26px) saturate(170%);
   --color-surface: #ffffff; /* solid, e.g. active segment, tooltips */
-  --color-inset: rgba(255, 255, 255, 0.45); /* blocks inside a card */
+  --color-inset: rgba(255, 255, 255, 0.38); /* blocks inside a card */
   --color-inset-border: rgba(28, 25, 23, 0.08);
   --color-border: rgba(28, 25, 23, 0.1); /* hairlines */
 
@@ -46,8 +53,8 @@
   --color-warning-border: rgba(217, 119, 6, 0.5);
 
   /* Shape & type */
-  --radius-card: 20px;
-  --radius-control: 13px;
+  --radius-card: 24px;
+  --radius-control: 14px;
   --shadow-card:
     0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.07),
     inset 0 1px 0 rgb(255 255 255 / 0.6);
@@ -69,16 +76,23 @@
   --color-tef: #8b5cf6;
   --color-eat: #d97706;
 
-  --color-bg: #131110;
-  --glow-a: rgba(13, 148, 136, 0.22);
-  --glow-b: rgba(217, 119, 6, 0.16);
-  --glow-c: rgba(139, 92, 246, 0.12);
+  --color-bg: #100e0d;
+  --glow-a: rgba(13, 148, 136, 0.38);
+  --glow-b: rgba(217, 119, 6, 0.3);
+  --glow-c: rgba(139, 92, 246, 0.22);
+  --glow-d: rgba(244, 63, 94, 0.14);
 
-  --glass-surface: rgba(34, 30, 27, 0.55);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-surface: rgba(32, 28, 25, 0.42);
+  --glass-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.015) 45%,
+    rgba(255, 255, 255, 0.05)
+  );
+  --glass-border: rgba(255, 255, 255, 0.12);
   --color-surface: #26221f;
   --color-inset: rgba(255, 255, 255, 0.05);
-  --color-inset-border: rgba(255, 255, 255, 0.08);
+  --color-inset-border: rgba(255, 255, 255, 0.09);
   --color-border: rgba(255, 255, 255, 0.1);
 
   --color-text: #f5f5f4;
@@ -115,12 +129,29 @@ body {
 body::before {
   content: '';
   position: fixed;
-  inset: 0;
+  inset: -20%;
   z-index: -1;
   background:
-    radial-gradient(640px 420px at 12% 6%, var(--glow-a), transparent 70%),
-    radial-gradient(560px 380px at 88% 24%, var(--glow-b), transparent 70%),
-    radial-gradient(720px 520px at 45% 95%, var(--glow-c), transparent 70%);
+    radial-gradient(46% 34% at 14% 8%, var(--glow-a), transparent 70%),
+    radial-gradient(40% 32% at 88% 20%, var(--glow-b), transparent 70%),
+    radial-gradient(50% 40% at 42% 92%, var(--glow-c), transparent 70%),
+    radial-gradient(36% 30% at 78% 72%, var(--glow-d), transparent 70%);
+  animation: ambient-drift 36s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2%, 2%, 0) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
 }
 
 #root {
@@ -199,7 +230,7 @@ body::before {
 /* ---------- Glass cards ---------- */
 
 .card {
-  background: var(--glass-surface);
+  background: var(--glass-sheen), var(--glass-surface);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
