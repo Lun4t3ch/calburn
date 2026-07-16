@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2f6ee"/>
+      <stop offset="0.45" stop-color="#e7efe4"/>
+      <stop offset="1" stop-color="#f4ecdd"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.78" cy="0.16" r="0.5">
+      <stop offset="0" stop-color="#fff7e0" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#fff7e0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="softer" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="18"/></filter>
+    <g id="leaf">
+      <path d="M0,0 C34,-52 108,-58 150,-6 C112,52 36,54 0,0 Z"/>
+      <path d="M8,-2 C56,-18 100,-20 142,-6" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="3"/>
+    </g>
+    <g id="branch">
+      <path d="M0,0 C60,-40 140,-70 260,-80" fill="none" stroke="#7fa98f" stroke-width="6" stroke-linecap="round"/>
+      <use href="#leaf" transform="translate(40,-22) rotate(-40) scale(0.42)"/>
+      <use href="#leaf" transform="translate(85,-40) rotate(15) scale(0.48)"/>
+      <use href="#leaf" transform="translate(135,-58) rotate(-35) scale(0.52)"/>
+      <use href="#leaf" transform="translate(185,-70) rotate(20) scale(0.55)"/>
+      <use href="#leaf" transform="translate(235,-78) rotate(-25) scale(0.5)"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#sun)"/>
+
+  <!-- far, very soft foliage masses -->
+  <g filter="url(#softer)">
+    <ellipse cx="180" cy="900" rx="480" ry="330" fill="#a9c8b2" opacity="0.75"/>
+    <ellipse cx="1520" cy="130" rx="420" ry="300" fill="#b9d3be" opacity="0.6"/>
+    <ellipse cx="1350" cy="960" rx="520" ry="300" fill="#9cc0a8" opacity="0.65"/>
+    <ellipse cx="620" cy="40" rx="360" ry="220" fill="#cfe0cd" opacity="0.55"/>
+  </g>
+
+  <!-- mid-ground branches, slightly out of focus -->
+  <g filter="url(#soft)">
+    <g transform="translate(-40,760) scale(2.1)" fill="#8fb8a0" opacity="0.85"><use href="#branch"/></g>
+    <g transform="translate(1660,300) scale(-2.4,2.4) rotate(18)" fill="#9dc2ab" opacity="0.75"><use href="#branch"/></g>
+    <g transform="translate(240,1030) scale(1.7) rotate(-24)" fill="#7dae93" opacity="0.8"><use href="#branch"/></g>
+    <g transform="translate(1680,1020) scale(-1.9,1.9) rotate(-10)" fill="#88b59b" opacity="0.8"><use href="#branch"/></g>
+    <g transform="translate(900,-60) scale(1.5) rotate(150)" fill="#b5d2bb" opacity="0.6"><use href="#branch"/></g>
+  </g>
+
+  <!-- floating leaves, nearer focus -->
+  <g fill="#6fa385" opacity="0.6" filter="url(#soft)">
+    <use href="#leaf" transform="translate(430,300) rotate(-30) scale(0.9)"/>
+    <use href="#leaf" transform="translate(1150,720) rotate(35) scale(1.1)"/>
+    <use href="#leaf" transform="translate(1300,420) rotate(-15) scale(0.7)"/>
+    <use href="#leaf" transform="translate(250,540) rotate(60) scale(0.8)"/>
+  </g>
+
+  <!-- bokeh -->
+  <g filter="url(#soft)">
+    <circle cx="1080" cy="180" r="46" fill="#ffffff" opacity="0.5"/>
+    <circle cx="920" cy="330" r="26" fill="#fff3d6" opacity="0.55"/>
+    <circle cx="560" cy="150" r="34" fill="#ffffff" opacity="0.4"/>
+    <circle cx="1420" cy="620" r="38" fill="#fff3d6" opacity="0.4"/>
+    <circle cx="180" cy="330" r="30" fill="#ffffff" opacity="0.45"/>
+    <circle cx="760" cy="860" r="42" fill="#ffffff" opacity="0.35"/>
+    <circle cx="1240" cy="900" r="24" fill="#fff3d6" opacity="0.45"/>
+  </g>
+</svg>

@@ -18,23 +18,21 @@
   --color-tef: #7c3aed;
   --color-eat: #d97706;
 
-  /* Ambient backdrop — strong enough that the glass visibly refracts it */
+  /* Backdrop artwork — soft botanical scene the glass frosts over */
   --color-bg: #e9ece6;
-  --glow-a: rgba(13, 148, 136, 0.5);
-  --glow-b: rgba(245, 158, 11, 0.4);
-  --glow-c: rgba(56, 189, 248, 0.38);
-  --glow-d: rgba(167, 139, 250, 0.28);
+  --bg-image: url('/bg-light.svg');
 
-  /* Glass surfaces */
-  --glass-surface: rgba(255, 255, 255, 0.38);
+  /* Glass surfaces — translucent enough to show the scene, frosted enough
+     to keep every word readable */
+  --glass-surface: rgba(255, 255, 255, 0.52);
   --glass-sheen: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.42),
-    rgba(255, 255, 255, 0.05) 45%,
-    rgba(255, 255, 255, 0.16)
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.2)
   );
-  --glass-border: rgba(255, 255, 255, 0.8);
-  --glass-blur: blur(26px) saturate(170%);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-blur: blur(18px) saturate(160%);
   --color-surface: #ffffff; /* solid, e.g. active segment, tooltips */
   --color-inset: rgba(255, 255, 255, 0.38); /* blocks inside a card */
   --color-inset-border: rgba(28, 25, 23, 0.08);
@@ -77,19 +75,17 @@
   --color-eat: #d97706;
 
   --color-bg: #100e0d;
-  --glow-a: rgba(13, 148, 136, 0.38);
-  --glow-b: rgba(217, 119, 6, 0.3);
-  --glow-c: rgba(139, 92, 246, 0.22);
-  --glow-d: rgba(244, 63, 94, 0.14);
+  --bg-image: url('/bg-dark.svg');
 
-  --glass-surface: rgba(32, 28, 25, 0.42);
+  --glass-surface: rgba(24, 21, 19, 0.58);
   --glass-sheen: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.09),
-    rgba(255, 255, 255, 0.015) 45%,
-    rgba(255, 255, 255, 0.05)
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.02) 45%,
+    rgba(255, 255, 255, 0.06)
   );
-  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-blur: blur(18px) saturate(140%);
   --color-surface: #26221f;
   --color-inset: rgba(255, 255, 255, 0.05);
   --color-inset-border: rgba(255, 255, 255, 0.09);
@@ -125,26 +121,23 @@ body {
   transition: background 0.3s, color 0.3s;
 }
 
-/* Ambient glow backdrop the glass panels sit on */
+/* Backdrop artwork the glass panels frost over (fixed layer: reliable on
+   mobile where background-attachment: fixed is ignored) */
 body::before {
   content: '';
   position: fixed;
-  inset: -20%;
+  inset: -6%;
   z-index: -1;
-  background:
-    radial-gradient(46% 34% at 14% 8%, var(--glow-a), transparent 70%),
-    radial-gradient(40% 32% at 88% 20%, var(--glow-b), transparent 70%),
-    radial-gradient(50% 40% at 42% 92%, var(--glow-c), transparent 70%),
-    radial-gradient(36% 30% at 78% 72%, var(--glow-d), transparent 70%);
-  animation: ambient-drift 36s ease-in-out infinite alternate;
+  background: var(--color-bg) var(--bg-image) center / cover no-repeat;
+  animation: ambient-drift 60s ease-in-out infinite alternate;
 }
 
 @keyframes ambient-drift {
   from {
-    transform: translate3d(-2%, -1%, 0) scale(1);
+    transform: translate3d(-1%, -0.5%, 0) scale(1);
   }
   to {
-    transform: translate3d(2%, 2%, 0) scale(1.08);
+    transform: translate3d(1%, 1%, 0) scale(1.05);
   }
 }
 
