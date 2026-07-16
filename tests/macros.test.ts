@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { macroTargets, macroTargetsFromSplit } from '../src/domain/macros'
+import {
+  macroTargets,
+  macroTargetsFromSplit,
+  rebalanceSplit,
+} from '../src/domain/macros'
 
 describe('macroTargets', () => {
   it('cutting: high protein (2.2 g/kg), fat ≥ 20% of calories, carbs fill the rest', () => {
@@ -62,5 +66,35 @@ describe('macroTargetsFromSplit', () => {
     })
     const kcal = t.proteinG * 4 + t.carbsG * 4 + t.fatG * 9
     expect(Math.abs(kcal - 2350)).toBeLessThan(15)
+  })
+})
+
+describe('rebalanceSplit', () => {
+  const start = { proteinPct: 30, carbsPct: 40, fatPct: 30 }
+
+  it('always totals 100 and keeps the changed value', () => {
+    for (const v of [0, 10, 55, 100]) {
+      const next = rebalanceSplit(start, 'proteinPct', v)
+      expect(next.proteinPct).toBe(v)
+      expect(next.proteinPct + next.carbsPct + next.fatPct).toBe(100)
+    }
+  })
+
+  it('redistributes proportionally to the other two', () => {
+    // protein 30 -> 50; carbs:fat were 40:30, so remaining 50 splits ~29:21
+    const next = rebalanceSplit(start, 'proteinPct', 50)
+    expect(next.carbsPct).toBe(29)
+    expect(next.fatPct).toBe(21)
+  })
+
+  it('handles the all-consumed edge (others at zero)', () => {
+    const next = rebalanceSplit(
+      { proteinPct: 100, carbsPct: 0, fatPct: 0 },
+      'proteinPct',
+      60,
+    )
+    expect(next.proteinPct + next.carbsPct + next.fatPct).toBe(100)
+    expect(next.carbsPct).toBe(20)
+    expect(next.fatPct).toBe(20)
   })
 })

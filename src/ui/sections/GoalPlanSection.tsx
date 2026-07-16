@@ -18,7 +18,12 @@ import {
   GOAL_PRESETS,
   getGoalPreset,
 } from '../../domain/goals'
-import { macroTargets, macroTargetsFromSplit } from '../../domain/macros'
+import {
+  DEFAULT_SPLIT,
+  macroTargets,
+  macroTargetsFromSplit,
+  rebalanceSplit,
+} from '../../domain/macros'
 import { equilibriumWeightKg, projectWeight } from '../../domain/projection'
 import { exampleDays, type ExampleDay } from '../../domain/foodExamples'
 import { formatWeight, formatWeightDelta } from '../../lib/format'
@@ -63,6 +68,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
   const customKcal = useAppStore((s) => s.customKcal)
   const setCustomKcal = useAppStore((s) => s.setCustomKcal)
   const macroSplit = useAppStore((s) => s.macroSplit)
+  const setMacroSplit = useAppStore((s) => s.setMacroSplit)
   const currentIntakeKcal = useAppStore((s) => s.currentIntakeKcal)
   const setCurrentIntakeKcal = useAppStore((s) => s.setCurrentIntakeKcal)
   const unitSystem = useAppStore((s) => s.unitSystem)
@@ -255,6 +261,52 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
             </>
           )}
         </p>
+
+        <OptionalBlock
+          label="Customize macro split"
+          hint="Set your own protein/carbs/fat percentages; the tiles above update live. Off = evidence-based defaults."
+          enabled={macroSplit !== undefined}
+          onToggle={(on) => setMacroSplit(on ? DEFAULT_SPLIT : undefined)}
+        >
+          {macroSplit && (
+            <>
+              <InputSlider
+                label="Protein"
+                display={`${macroSplit.proteinPct}%`}
+                value={macroSplit.proteinPct}
+                min={0}
+                max={100}
+                onChange={(v) =>
+                  setMacroSplit(rebalanceSplit(macroSplit, 'proteinPct', v))
+                }
+              />
+              <InputSlider
+                label="Carbs"
+                display={`${macroSplit.carbsPct}%`}
+                value={macroSplit.carbsPct}
+                min={0}
+                max={100}
+                onChange={(v) =>
+                  setMacroSplit(rebalanceSplit(macroSplit, 'carbsPct', v))
+                }
+              />
+              <InputSlider
+                label="Fat"
+                display={`${macroSplit.fatPct}%`}
+                value={macroSplit.fatPct}
+                min={0}
+                max={100}
+                onChange={(v) =>
+                  setMacroSplit(rebalanceSplit(macroSplit, 'fatPct', v))
+                }
+              />
+              <p className="helper-text">
+                Total always stays at 100%: moving one slider rebalances the
+                other two.
+              </p>
+            </>
+          )}
+        </OptionalBlock>
       </div>
 
       <div className="field">

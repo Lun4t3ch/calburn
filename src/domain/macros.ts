@@ -72,6 +72,34 @@ export function macroTargets(
   }
 }
 
+/** Balanced starting point for a custom split. */
+export const DEFAULT_SPLIT: MacroSplit = { proteinPct: 30, carbsPct: 40, fatPct: 30 }
+
+/**
+ * Change one macro's percentage and redistribute the difference across the
+ * other two (proportionally to their current share) so the total stays 100.
+ */
+export function rebalanceSplit(
+  split: MacroSplit,
+  key: keyof MacroSplit,
+  value: number,
+): MacroSplit {
+  const clamped = Math.max(0, Math.min(100, value))
+  const others = (['proteinPct', 'carbsPct', 'fatPct'] as const).filter(
+    (k) => k !== key,
+  )
+  const restTotal = split[others[0]] + split[others[1]]
+  const remaining = 100 - clamped
+  const share0 =
+    restTotal > 0
+      ? Math.round((split[others[0]] / restTotal) * remaining)
+      : Math.round(remaining / 2)
+  const next = { ...split, [key]: clamped }
+  next[others[0]] = share0
+  next[others[1]] = remaining - share0
+  return next
+}
+
 /**
  * Macro grams from a user-chosen percentage split (protein/carbs/fat,
  * summing to 100). Grams = share of calories divided by kcal per gram.

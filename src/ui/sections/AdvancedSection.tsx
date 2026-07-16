@@ -1,57 +1,29 @@
 /**
  * Optional advanced input, presented as a clearly-labeled expandable step in
- * the flow: body fat % (Katch-McArdle), macro intake (precise TEF), a custom
- * macro percentage split for targets, daily steps (replaces the leisure
- * estimate) and an exact exercise calorie override. Everything optional,
- * so the defaults stay honest.
+ * the flow: body fat % (Katch-McArdle), what you actually eat (precise TEF),
+ * daily steps (replaces the leisure estimate) and an exact exercise calorie
+ * override. Everything optional, so the defaults stay honest.
+ *
+ * Note: the custom macro-target split lives in the plan section next to the
+ * macro tiles it controls, NOT here. This section only refines the burn
+ * estimate.
  */
 
 import { InputSlider } from '../components/InputSlider'
 import { InsightTip } from '../components/InsightTip'
 import { OptionalBlock } from '../components/OptionalBlock'
-import { macroKcal } from '../../domain/tef'
+import { macroKcal, tefFromMacros } from '../../domain/tef'
 import { useAppStore } from '../../state/store'
-import type { MacroSplit } from '../../domain/types'
 
 const DEFAULT_MACROS = { proteinG: 100, carbsG: 250, fatG: 70, alcoholG: 0 }
-
-/** Balanced starting point for a custom split. */
-const DEFAULT_SPLIT: MacroSplit = { proteinPct: 30, carbsPct: 40, fatPct: 30 }
-
-/**
- * Change one macro's percentage and redistribute the difference across the
- * other two (proportionally to their current share) so the total stays 100.
- */
-function rebalanceSplit(
-  split: MacroSplit,
-  key: keyof MacroSplit,
-  value: number,
-): MacroSplit {
-  const clamped = Math.max(0, Math.min(100, value))
-  const others = (['proteinPct', 'carbsPct', 'fatPct'] as const).filter(
-    (k) => k !== key,
-  )
-  const restTotal = split[others[0]] + split[others[1]]
-  const remaining = 100 - clamped
-  const share0 =
-    restTotal > 0
-      ? Math.round((split[others[0]] / restTotal) * remaining)
-      : Math.round(remaining / 2)
-  const next = { ...split, [key]: clamped }
-  next[others[0]] = share0
-  next[others[1]] = remaining - share0
-  return next
-}
 
 export function AdvancedSection() {
   const profile = useAppStore((s) => s.profile)
   const activity = useAppStore((s) => s.activity)
   const macros = useAppStore((s) => s.macros)
-  const macroSplit = useAppStore((s) => s.macroSplit)
   const setProfile = useAppStore((s) => s.setProfile)
   const setActivity = useAppStore((s) => s.setActivity)
   const setMacros = useAppStore((s) => s.setMacros)
-  const setMacroSplit = useAppStore((s) => s.setMacroSplit)
   const advancedOpen = useAppStore((s) => s.advancedOpen)
   const setAdvancedOpen = useAppStore((s) => s.setAdvancedOpen)
 
@@ -100,8 +72,8 @@ export function AdvancedSection() {
       </OptionalBlock>
 
       <OptionalBlock
-        label="What you eat (macros)"
-        hint="Digesting protein burns 20 to 30% of its calories. This sharpens the TEF slice"
+        label="What you actually eat today"
+        hint="Only sharpens the 'digesting food' (TEF) slice of your burn estimate. It does not set your plan targets; those are below, under your plan."
         enabled={macros !== undefined}
         onToggle={(on) => setMacros(on ? DEFAULT_MACROS : undefined)}
       >
@@ -145,54 +117,10 @@ export function AdvancedSection() {
             />
             <p className="helper-text">
               ≈ {Math.round(macroKcal(macros)).toLocaleString('en-US')} kcal of
-              food per day. (One beer ≈ 14 g alcohol.)
-            </p>
-          </>
-        )}
-      </OptionalBlock>
-
-      <OptionalBlock
-        label="Custom macro split (%)"
-        hint="Choose how your target calories divide between protein, carbs and fat. Used for the macro targets in your plan."
-        enabled={macroSplit !== undefined}
-        onToggle={(on) => setMacroSplit(on ? DEFAULT_SPLIT : undefined)}
-      >
-        {macroSplit && (
-          <>
-            <InputSlider
-              label="Protein"
-              display={`${macroSplit.proteinPct}%`}
-              value={macroSplit.proteinPct}
-              min={0}
-              max={100}
-              onChange={(v) =>
-                setMacroSplit(rebalanceSplit(macroSplit, 'proteinPct', v))
-              }
-            />
-            <InputSlider
-              label="Carbs"
-              display={`${macroSplit.carbsPct}%`}
-              value={macroSplit.carbsPct}
-              min={0}
-              max={100}
-              onChange={(v) =>
-                setMacroSplit(rebalanceSplit(macroSplit, 'carbsPct', v))
-              }
-            />
-            <InputSlider
-              label="Fat"
-              display={`${macroSplit.fatPct}%`}
-              value={macroSplit.fatPct}
-              min={0}
-              max={100}
-              onChange={(v) =>
-                setMacroSplit(rebalanceSplit(macroSplit, 'fatPct', v))
-              }
-            />
-            <p className="helper-text">
-              Total always stays at 100%: moving one slider rebalances the
-              other two. The gram amounts appear under "Daily macros to aim
-              for" in your plan below.
+              food per day; digesting it costs ≈{' '}
+              {Math.round(tefFromMacros(macros)).toLocaleString('en-US')} kcal.
+              That's the TEF slice in "Your burn" below. (One beer ≈ 14 g
+              alcohol.)
             </p>
           </>
         )}
