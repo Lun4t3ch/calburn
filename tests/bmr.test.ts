@@ -43,6 +43,10 @@ describe('bmr()', () => {
   it('uses Katch-McArdle when body fat % given', () => {
     expect(bmr({ ...man, bodyFatPct: 20 })).toBeCloseTo(1752.4, 1)
   })
+
+  it('a measured RMR beats every formula', () => {
+    expect(bmr({ ...man, bodyFatPct: 20, measuredRmrKcal: 1900 })).toBe(1900)
+  })
 })
 
 describe('bmrEstimate()', () => {
@@ -57,5 +61,12 @@ describe('bmrEstimate()', () => {
     const est = bmrEstimate(man)
     // HB revised (1853.6) is inside 1780·1.1 = 1958, so high = 1958
     expect(est.high).toBeCloseTo(1958, 0)
+  })
+
+  it('a measured RMR gets a tighter ±5% band, ignoring formula spread', () => {
+    const est = bmrEstimate({ ...man, measuredRmrKcal: 2000 })
+    expect(est.value).toBe(2000)
+    expect(est.low).toBeCloseTo(1900, 0)
+    expect(est.high).toBeCloseTo(2100, 0)
   })
 })

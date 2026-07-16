@@ -42,11 +42,16 @@ export function katchMcArdle(weightKg: number, bodyFatPct: number): number {
 }
 
 /**
- * Best-estimate BMR for a profile: Katch-McArdle when body fat % is provided,
- * otherwise Mifflin-St Jeor.
+ * Best-estimate BMR for a profile, in order of trust:
+ * 1. a professionally measured RMR (indirect calorimetry) beats any formula,
+ * 2. Katch-McArdle when body fat % is provided,
+ * 3. Mifflin-St Jeor otherwise.
  */
 export function bmr(profile: Profile): number {
-  const { sex, age, weightKg, heightCm, bodyFatPct } = profile
+  const { sex, age, weightKg, heightCm, bodyFatPct, measuredRmrKcal } = profile
+  if (measuredRmrKcal !== undefined) {
+    return measuredRmrKcal
+  }
   if (bodyFatPct !== undefined) {
     return katchMcArdle(weightKg, bodyFatPct)
   }
@@ -56,11 +61,16 @@ export function bmr(profile: Profile): number {
 /**
  * BMR with an honest uncertainty band: ±10% around the primary estimate
  * (typical individual prediction error), widened if other established
- * equations fall outside that band.
+ * equations fall outside that band. A measured RMR gets a tighter ±5%
+ * band (device/method error) and ignores the formula spread.
  */
 export function bmrEstimate(profile: Profile): Estimate {
-  const { sex, age, weightKg, heightCm, bodyFatPct } = profile
+  const { sex, age, weightKg, heightCm, bodyFatPct, measuredRmrKcal } = profile
   const primary = bmr(profile)
+
+  if (measuredRmrKcal !== undefined) {
+    return { value: primary, low: primary * 0.95, high: primary * 1.05 }
+  }
 
   const candidates = [
     primary,

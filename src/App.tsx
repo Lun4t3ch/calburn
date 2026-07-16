@@ -9,6 +9,7 @@ import { ResultsSection } from './ui/sections/ResultsSection'
 import { GoalPlanSection } from './ui/sections/GoalPlanSection'
 import { NextStepsSection } from './ui/sections/NextStepsSection'
 import { energyBreakdown } from './domain/tdee'
+import { mifflinStJeor } from './domain/bmr'
 import { useAppStore } from './state/store'
 
 function App() {
@@ -29,12 +30,24 @@ function App() {
   const energy = energyBreakdown({ profile, activity, macros })
 
   // Maintenance as a function of bodyweight, drives the adaptive projection.
-  const tdeeAt = (weightKg: number) =>
-    energyBreakdown({
-      profile: { ...profile, weightKg },
-      activity,
-      macros,
-    }).total.value
+  // A measured RMR is anchored to today's weight, so scale it with the
+  // Mifflin ratio as projected weight changes (keeps the calibration while
+  // preserving the adaptive flattening).
+  const tdeeAt = (weightKg: number) => {
+    const p = { ...profile, weightKg }
+    if (profile.measuredRmrKcal !== undefined) {
+      const ratio =
+        mifflinStJeor(profile.sex, weightKg, profile.heightCm, profile.age) /
+        mifflinStJeor(
+          profile.sex,
+          profile.weightKg,
+          profile.heightCm,
+          profile.age,
+        )
+      p.measuredRmrKcal = profile.measuredRmrKcal * ratio
+    }
+    return energyBreakdown({ profile: p, activity, macros }).total.value
+  }
 
   return (
     <div className="app-shell">

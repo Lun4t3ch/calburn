@@ -22,6 +22,8 @@ export interface Profile {
   heightCm: number
   /** Optional body fat percentage (e.g. 22 = 22%). Unlocks Katch-McArdle BMR. */
   bodyFatPct?: number
+  /** Optional professionally measured RMR (indirect calorimetry). Beats all formulas. */
+  measuredRmrKcal?: number
 }
 
 /** One regular workout the user does. */

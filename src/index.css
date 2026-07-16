@@ -1225,6 +1225,47 @@ select option {
   color: var(--color-text);
 }
 
+/* ---------- Tape-measure estimator ---------- */
+
+.tape-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 0.6rem;
+  border: 1px dashed var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  text-align: left;
+}
+
+.tape-body {
+  margin-top: 0.8rem;
+}
+
+.tape-apply {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+:root[data-theme='dark'] .tape-apply {
+  color: #0c0a09;
+}
+
 /* ---------- Next steps ---------- */
 
 .next-steps-icon {
