@@ -30,19 +30,19 @@ Possible values
 
 ## Tech Stack
 
-Language:
+Language: TypeScript
 
-Framework:
+Framework: React 18 + Vite 6 (client-only SPA, PWA via vite-plugin-pwa)
 
-Backend:
+Backend: None (all calculations in-browser)
 
-Database:
+Database: None (localStorage persistence)
 
-Hosting:
+Hosting: Local dev only for now (static hosting later)
 
-Authentication:
+Authentication: None
 
-AI:
+AI: None
 
 ---
 
@@ -90,4 +90,4 @@ Any project-specific coding conventions.
 
 ## Recent Progress
 
-Update this section as important milestones are completed.
+- 2026-07-16: Phase 1 complete — Vite + React + TS scaffold with PWA, ESLint, Vitest; build/lint/test/dev all verified.

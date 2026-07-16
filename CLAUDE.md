@@ -36,3 +36,13 @@ Before requesting a Codex review:
 - Ask me for approval before involving Codex.
 - Briefly explain why a second opinion is worthwhile.
 - Compare Codex's recommendations with your own and explain any differences.
+
+## Workflows
+
+If the user's request appears to invoke a repository workflow, first read `WORKFLOWS.MD` before taking any action.
+
+Only execute workflows that are explicitly defined in `WORKFLOWS.MD`.
+
+Do not infer or invent workflows.
+
+If the request is ambiguous, ask for clarification before executing a workflow.
