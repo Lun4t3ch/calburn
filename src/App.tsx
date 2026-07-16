@@ -7,6 +7,7 @@ import { ActivitySection } from './ui/sections/ActivitySection'
 import { AdvancedSection } from './ui/sections/AdvancedSection'
 import { ResultsSection } from './ui/sections/ResultsSection'
 import { GoalPlanSection } from './ui/sections/GoalPlanSection'
+import { NextStepsSection } from './ui/sections/NextStepsSection'
 import { energyBreakdown } from './domain/tdee'
 import { useAppStore } from './state/store'
 
@@ -75,6 +76,7 @@ function App() {
         <AdvancedSection />
         <ResultsSection energy={energy} />
         <GoalPlanSection energy={energy} profile={profile} tdeeAt={tdeeAt} />
+        <NextStepsSection />
         <InsightTip anchor="motivation" rotation={activity.workouts.length} />
         <SettingsBar />
       </main>
@@ -100,6 +102,10 @@ function App() {
           educational tool, not medical advice; check with a doctor or dietitian
           before big changes, especially if you're pregnant, under 18, or have a
           health condition.
+        </p>
+        <p className="footer-credit">
+          Developed by Tony Renstrom, certified personal trainer, endurance
+          coach and nutrition counselor.
         </p>
       </footer>
     </div>

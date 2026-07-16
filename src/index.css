@@ -1225,6 +1225,35 @@ select option {
   color: var(--color-text);
 }
 
+/* ---------- Next steps ---------- */
+
+.next-steps-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.next-steps-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.next-steps-signoff {
+  margin: 1rem 0 0;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-primary-strong);
+}
+
+.footer-credit {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
 /* ---------- Mobile ---------- */
 
 @media (max-width: 480px) {
