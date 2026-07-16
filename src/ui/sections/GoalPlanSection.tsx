@@ -108,16 +108,24 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
     >
       <div className="field">
         <span className="field-label">Goal</span>
-        <Segmented
-          vertical
-          ariaLabel="Goal"
-          value={goal}
-          options={[
-            ...GOAL_PRESETS.map((g) => ({ value: g.id, label: g.label })),
-            { value: 'custom' as const, label: 'Custom calorie target' },
-          ]}
-          onChange={setGoal}
-        />
+        <div className="select-wrap">
+          <select
+            className="goal-select"
+            aria-label="Goal"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value as typeof goal)}
+          >
+            {GOAL_PRESETS.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.label}
+              </option>
+            ))}
+            <option value="custom">Custom calorie target</option>
+          </select>
+          <span className="select-chevron" aria-hidden>
+            ▾
+          </span>
+        </div>
         {isCustom ? (
           <div className="custom-goal">
             <InputSlider

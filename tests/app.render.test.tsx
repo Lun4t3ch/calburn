@@ -44,18 +44,34 @@ describe('<App /> end-to-end render', () => {
     expect(document.documentElement.dataset.theme).not.toBe(before)
   })
 
-  it('renders the goal planner with a food example day', () => {
+  it('renders the goal planner with a dropdown and macro tiles', () => {
     render(<App />)
     expect(screen.getByText('Your plan')).toBeTruthy()
-    // A goal option and macro tiles exist
-    expect(screen.getByRole('radio', { name: 'Moderate weight loss' })).toBeTruthy()
+    const select = screen.getByRole('combobox', { name: 'Goal' })
+    expect(select).toBeTruthy()
+    expect(screen.getByRole('option', { name: 'Moderate weight loss' })).toBeTruthy()
+    expect(screen.getByRole('option', { name: 'Custom calorie target' })).toBeTruthy()
     expect(screen.getByText('protein')).toBeTruthy()
   })
 
   it('projects a weight change and chart when a loss goal is chosen', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('radio', { name: 'Aggressive weight loss' }))
+    fireEvent.change(screen.getByRole('combobox', { name: 'Goal' }), {
+      target: { value: 'aggressiveLoss' },
+    })
     // Trajectory chart is an SVG with an accessible label
+    expect(screen.getByLabelText(/Projected weight over/i)).toBeTruthy()
+  })
+
+  it('custom goal shows a calorie slider and keeps the trajectory below the floor', () => {
+    render(<App />)
+    fireEvent.change(screen.getByRole('combobox', { name: 'Goal' }), {
+      target: { value: 'custom' },
+    })
+    const slider = screen.getByRole('slider', { name: 'Daily calories' })
+    fireEvent.change(slider, { target: { value: 1000 } })
+    // Warning appears but the chart still renders
+    expect(screen.getByText(/below the recommended minimum/i)).toBeTruthy()
     expect(screen.getByLabelText(/Projected weight over/i)).toBeTruthy()
   })
 
