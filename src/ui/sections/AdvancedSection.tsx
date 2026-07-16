@@ -39,8 +39,7 @@ export function AdvancedSection() {
         <span className="advanced-titles">
           <span className="advanced-title">Optional advanced input</span>
           <span className="advanced-subtitle">
-            Body fat %, macros, daily steps, exact exercise calories, for a
-            sharper estimate
+            Body fat %, what you eat, daily steps, for a sharper estimate
           </span>
         </span>
         <span className="advanced-chevron" aria-hidden>
@@ -143,30 +142,11 @@ export function AdvancedSection() {
         />
       </OptionalBlock>
 
-      <OptionalBlock
-        label="Exact exercise calories"
-        hint="If your watch tracks workouts, enter its daily average instead of our estimate"
-        enabled={activity.exerciseKcalPerDayOverride !== undefined}
-        onToggle={(on) =>
-          setActivity({ exerciseKcalPerDayOverride: on ? 300 : undefined })
-        }
-      >
-        <InputSlider
-          label="Exercise burn"
-          display={`${activity.exerciseKcalPerDayOverride ?? 300} kcal/day`}
-          value={activity.exerciseKcalPerDayOverride ?? 300}
-          min={0}
-          max={1500}
-          step={25}
-          onChange={(exerciseKcalPerDayOverride) =>
-            setActivity({ exerciseKcalPerDayOverride })
-          }
-        />
-        <p className="helper-text">
-          Heads up: fitness trackers often overstate exercise burn, treat it
-          as a rough guide.
-        </p>
-      </OptionalBlock>
+      <p className="helper-text">
+        Have exact workout calories from a watch or machine? Add a workout
+        under "How you move" and choose "Custom (enter calories burned)",
+        that way each session counts once, alongside your other workouts.
+      </p>
 
           <InsightTip anchor="advanced" rotation={macros ? macros.proteinG : 0} />
         </div>

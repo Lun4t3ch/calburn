@@ -38,11 +38,10 @@ export interface Workout {
 export interface ActivityInputs {
   job: JobActivity
   leisure: LeisureActivity
+  /** Exact watch/machine calories go in as a 'custom' workout entry. */
   workouts: Workout[]
   /** Advanced: average daily steps, replaces the leisure estimate when set. */
   stepsPerDay?: number
-  /** Advanced: exact average exercise kcal/day (e.g. from a watch), overrides workout estimate. */
-  exerciseKcalPerDayOverride?: number
 }
 
 /** Advanced: daily macro intake in grams, used for a precise TEF estimate. */

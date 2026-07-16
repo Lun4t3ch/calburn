@@ -90,9 +90,20 @@ describe('eatKcal', () => {
     expect(eatKcal(WEIGHT, base)).toBeCloseTo(85.7 + 86.9, 0)
   })
 
-  it('exact override wins over the estimate', () => {
-    expect(
-      eatKcal(WEIGHT, { ...base, exerciseKcalPerDayOverride: 400 }),
-    ).toBe(400)
+  it('custom workouts add together with MET-based ones', () => {
+    const withCustom = {
+      ...base,
+      workouts: [
+        ...base.workouts,
+        {
+          activityId: 'custom',
+          hoursPerWeek: 0,
+          kcalPerSession: 350,
+          sessionsPerWeek: 2,
+        },
+      ],
+    }
+    // 350 × 2 / 7 = 100 extra kcal/day on top of the MET workouts
+    expect(eatKcal(WEIGHT, withCustom)).toBeCloseTo(85.7 + 86.9 + 100, 0)
   })
 })

@@ -77,13 +77,10 @@ export function workoutKcalPerDay(workout: Workout, weightKg: number): number {
 }
 
 /**
- * EAT in kcal/day. An exact kcal/day override (advanced, e.g. from a watch)
- * wins over the per-workout estimates.
+ * EAT in kcal/day: the sum of all workouts. Exact device numbers are
+ * entered as 'custom' workouts, so there is exactly one source of truth.
  */
 export function eatKcal(weightKg: number, inputs: ActivityInputs): number {
-  if (inputs.exerciseKcalPerDayOverride !== undefined) {
-    return Math.max(0, inputs.exerciseKcalPerDayOverride)
-  }
   return inputs.workouts.reduce(
     (sum, w) => sum + workoutKcalPerDay(w, weightKg),
     0,
