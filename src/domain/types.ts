@@ -26,9 +26,13 @@ export interface Profile {
 
 /** One regular workout the user does. */
 export interface Workout {
-  /** id into the MET table (see data/met-values.ts) */
+  /** id into the MET table (see data/met-values.ts), or 'custom' */
   activityId: string
   hoursPerWeek: number
+  /** Custom workout: estimated kcal burned per session. */
+  kcalPerSession?: number
+  /** Custom workout: sessions per week. */
+  sessionsPerWeek?: number
 }
 
 export interface ActivityInputs {

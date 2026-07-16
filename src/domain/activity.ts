@@ -12,7 +12,15 @@
  */
 
 import { getMetActivity } from '../data/met-values'
-import type { ActivityInputs, JobActivity, LeisureActivity } from './types'
+import type {
+  ActivityInputs,
+  JobActivity,
+  LeisureActivity,
+  Workout,
+} from './types'
+
+/** Sentinel activity id: user enters calories per session directly. */
+export const CUSTOM_WORKOUT_ID = 'custom'
 
 /** NEAT from occupation, as a fraction of BMR. */
 export const JOB_NEAT_FACTOR: Record<JobActivity, number> = {
@@ -54,28 +62,30 @@ export function neatKcal(
   return jobNeat + bmrKcal * LEISURE_NEAT_FACTOR[inputs.leisure]
 }
 
-/** Net kcal burned by one workout session type, averaged per day. */
-export function workoutKcalPerDay(
-  activityId: string,
-  hoursPerWeek: number,
-  weightKg: number,
-): number {
-  const activity = getMetActivity(activityId)
+/** Net kcal burned by one workout, averaged per day. */
+export function workoutKcalPerDay(workout: Workout, weightKg: number): number {
+  if (workout.activityId === CUSTOM_WORKOUT_ID) {
+    // User-entered calories per session (e.g. from a watch or machine).
+    const perSession = Math.max(0, workout.kcalPerSession ?? 0)
+    const sessions = Math.max(0, workout.sessionsPerWeek ?? 0)
+    return (perSession * sessions) / 7
+  }
+  const activity = getMetActivity(workout.activityId)
   if (!activity) return 0
   const netMet = Math.max(0, activity.met - 1)
-  return (netMet * weightKg * hoursPerWeek) / 7
+  return (netMet * weightKg * workout.hoursPerWeek) / 7
 }
 
 /**
  * EAT in kcal/day. An exact kcal/day override (advanced, e.g. from a watch)
- * wins over the MET estimate.
+ * wins over the per-workout estimates.
  */
 export function eatKcal(weightKg: number, inputs: ActivityInputs): number {
   if (inputs.exerciseKcalPerDayOverride !== undefined) {
     return Math.max(0, inputs.exerciseKcalPerDayOverride)
   }
   return inputs.workouts.reduce(
-    (sum, w) => sum + workoutKcalPerDay(w.activityId, w.hoursPerWeek, weightKg),
+    (sum, w) => sum + workoutKcalPerDay(w, weightKg),
     0,
   )
 }

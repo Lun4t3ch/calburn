@@ -46,13 +46,16 @@
   --color-text: #1c1917;
   --color-text-muted: #6d675f;
 
-  /* Tips & warnings */
-  --color-tip-bg: rgba(13, 148, 136, 0.1);
-  --color-tip-border: rgba(13, 148, 136, 0.28);
+  /* Tips & warnings. Tips wear amber (lightbulb) so they read as
+     something different from inputs and results */
+  --color-tip-bg: rgba(245, 158, 11, 0.1);
+  --color-tip-border: rgba(217, 119, 6, 0.35);
+  --color-tip-accent: #d97706;
   --color-motivation-bg: rgba(132, 204, 22, 0.12);
   --color-motivation-border: rgba(101, 163, 13, 0.35);
-  --color-warning-bg: rgba(245, 158, 11, 0.14);
-  --color-warning-border: rgba(217, 119, 6, 0.5);
+  --color-motivation-accent: #65a30d;
+  --color-warning-bg: rgba(239, 68, 68, 0.1);
+  --color-warning-border: rgba(220, 38, 38, 0.45);
 
   /* Shape & type */
   --radius-card: 24px;
@@ -100,12 +103,14 @@
   --color-text: #f5f5f4;
   --color-text-muted: #cbc6c0; /* brighter than stone-400 for readability on glass */
 
-  --color-tip-bg: rgba(45, 212, 191, 0.1);
-  --color-tip-border: rgba(45, 212, 191, 0.25);
-  --color-motivation-bg: rgba(132, 204, 22, 0.1);
-  --color-motivation-border: rgba(132, 204, 22, 0.25);
-  --color-warning-bg: rgba(251, 191, 36, 0.1);
-  --color-warning-border: rgba(217, 119, 6, 0.5);
+  --color-tip-bg: rgba(251, 191, 36, 0.09);
+  --color-tip-border: rgba(251, 191, 36, 0.3);
+  --color-tip-accent: #fbbf24;
+  --color-motivation-bg: rgba(163, 230, 53, 0.09);
+  --color-motivation-border: rgba(163, 230, 53, 0.28);
+  --color-motivation-accent: #a3e635;
+  --color-warning-bg: rgba(248, 113, 113, 0.1);
+  --color-warning-border: rgba(248, 113, 113, 0.4);
 
   --shadow-card:
     0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.45),
@@ -462,6 +467,21 @@ input[type='range'] {
   max-width: 100%;
 }
 
+/* Dropdown lists: keep group headers and options readable in both themes
+   (native optgroup labels default to grey on dark surfaces) */
+select optgroup {
+  background: var(--color-surface);
+  color: var(--color-primary-strong);
+  font-weight: 700;
+  font-style: normal;
+}
+
+select option {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 400;
+}
+
 .workout-remove {
   grid-column: 2;
   border: none;
@@ -488,6 +508,18 @@ input[type='range'] {
 
 .workout-hours input {
   flex: 1;
+}
+
+.workout-custom-warning {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
 }
 
 .workout-add {
@@ -1036,6 +1068,7 @@ input[type='range'] {
   gap: 0.5rem;
   background: var(--color-tip-bg);
   border: 1px solid var(--color-tip-border);
+  border-left: 4px solid var(--color-tip-accent);
   border-radius: var(--radius-control);
   padding: 0.7rem 0.8rem;
   margin-top: 1rem;
@@ -1044,6 +1077,7 @@ input[type='range'] {
 .insight-tip-motivation {
   background: var(--color-motivation-bg);
   border-color: var(--color-motivation-border);
+  border-left-color: var(--color-motivation-accent);
 }
 
 .insight-tip-body {

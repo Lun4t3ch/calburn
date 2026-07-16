@@ -40,11 +40,39 @@ describe('neatKcal', () => {
 describe('workoutKcalPerDay', () => {
   it('uses net MET (MET − 1) averaged over the week', () => {
     // running-moderate MET 9.8 → net 8.8; 3 h/wk × 80 kg → 8.8·80·3/7 ≈ 301.7
-    expect(workoutKcalPerDay('running-moderate', 3, WEIGHT)).toBeCloseTo(301.7, 0)
+    expect(
+      workoutKcalPerDay(
+        { activityId: 'running-moderate', hoursPerWeek: 3 },
+        WEIGHT,
+      ),
+    ).toBeCloseTo(301.7, 0)
   })
 
   it('returns 0 for unknown activities', () => {
-    expect(workoutKcalPerDay('does-not-exist', 5, WEIGHT)).toBe(0)
+    expect(
+      workoutKcalPerDay({ activityId: 'does-not-exist', hoursPerWeek: 5 }, WEIGHT),
+    ).toBe(0)
+  })
+
+  it('custom workouts use kcal per session times sessions per week', () => {
+    // 400 kcal × 3 sessions / 7 days ≈ 171.4 kcal/day
+    expect(
+      workoutKcalPerDay(
+        {
+          activityId: 'custom',
+          hoursPerWeek: 0,
+          kcalPerSession: 400,
+          sessionsPerWeek: 3,
+        },
+        WEIGHT,
+      ),
+    ).toBeCloseTo(171.4, 0)
+  })
+
+  it('custom workouts ignore negative or missing values safely', () => {
+    expect(
+      workoutKcalPerDay({ activityId: 'custom', hoursPerWeek: 0 }, WEIGHT),
+    ).toBe(0)
   })
 })
 
