@@ -10,6 +10,7 @@ import type {
   ActivityInputs,
   GoalId,
   MacroIntake,
+  MacroSplit,
   Profile,
   UnitSystem,
 } from '../domain/types'
@@ -26,6 +27,10 @@ export interface AppState {
   /** Whether the optional advanced-input section is expanded. */
   advancedOpen: boolean
   goal: GoalId
+  /** Exact daily calorie target when the goal is 'custom'. */
+  customKcal: number
+  /** Optional custom macro percentage split (advanced). */
+  macroSplit?: MacroSplit
   /** Optional: what the user estimates they currently eat (kcal/day). */
   currentIntakeKcal?: number
   tipsEnabled: boolean
@@ -38,6 +43,8 @@ export interface AppState {
   setTheme: (theme: Theme) => void
   setAdvancedOpen: (open: boolean) => void
   setGoal: (goal: GoalId) => void
+  setCustomKcal: (kcal: number) => void
+  setMacroSplit: (split: MacroSplit | undefined) => void
   setCurrentIntakeKcal: (kcal: number | undefined) => void
   setTipsEnabled: (enabled: boolean) => void
   dismissTip: (id: string) => void
@@ -75,6 +82,8 @@ export const useAppStore = create<AppState>()(
       theme: systemTheme(),
       advancedOpen: false,
       goal: 'maintain',
+      customKcal: 2000,
+      macroSplit: undefined,
       currentIntakeKcal: undefined,
       tipsEnabled: true,
       dismissedTips: [],
@@ -88,6 +97,8 @@ export const useAppStore = create<AppState>()(
       setTheme: (theme) => set({ theme }),
       setAdvancedOpen: (advancedOpen) => set({ advancedOpen }),
       setGoal: (goal) => set({ goal }),
+      setCustomKcal: (customKcal) => set({ customKcal }),
+      setMacroSplit: (macroSplit) => set({ macroSplit }),
       setCurrentIntakeKcal: (currentIntakeKcal) => set({ currentIntakeKcal }),
       setTipsEnabled: (tipsEnabled) => set({ tipsEnabled }),
       dismissTip: (id) =>

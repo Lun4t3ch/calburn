@@ -1,6 +1,7 @@
 /**
- * Goal-first planning: pick a goal → get a calorie plan, adaptive weight
- * trajectory, macro targets and food-equivalent example days.
+ * Goal-first planning: pick a goal (or a custom calorie target) and get a
+ * calorie plan, adaptive weight trajectory, macro targets and
+ * food-equivalent example days.
  */
 
 import { useState } from 'react'
@@ -10,8 +11,14 @@ import { InsightTip } from '../components/InsightTip'
 import { OptionalBlock } from '../components/OptionalBlock'
 import { Segmented } from '../components/Segmented'
 import { TrajectoryChart } from '../components/TrajectoryChart'
-import { caloriePlan, GOAL_PRESETS, getGoalPreset } from '../../domain/goals'
-import { macroTargets } from '../../domain/macros'
+import {
+  CALORIE_FLOOR,
+  caloriePlan,
+  customCaloriePlan,
+  GOAL_PRESETS,
+  getGoalPreset,
+} from '../../domain/goals'
+import { macroTargets, macroTargetsFromSplit } from '../../domain/macros'
 import { equilibriumWeightKg, projectWeight } from '../../domain/projection'
 import { exampleDays, type ExampleDay } from '../../domain/foodExamples'
 import { formatWeight, formatWeightDelta } from '../../lib/format'
@@ -39,7 +46,7 @@ function FoodDay({ day, title, emoji }: { day: ExampleDay; title: string; emoji:
             <span aria-hidden>{food.emoji}</span>{' '}
             {count > 1 ? `${count}× ` : ''}
             {food.label}
-            <span className="food-portion"> — {food.portion}</span>
+            <span className="food-portion"> ({food.portion})</span>
           </li>
         ))}
       </ul>
@@ -53,14 +60,19 @@ function FoodDay({ day, title, emoji }: { day: ExampleDay; title: string; emoji:
 export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProps) {
   const goal = useAppStore((s) => s.goal)
   const setGoal = useAppStore((s) => s.setGoal)
+  const customKcal = useAppStore((s) => s.customKcal)
+  const setCustomKcal = useAppStore((s) => s.setCustomKcal)
+  const macroSplit = useAppStore((s) => s.macroSplit)
   const currentIntakeKcal = useAppStore((s) => s.currentIntakeKcal)
   const setCurrentIntakeKcal = useAppStore((s) => s.setCurrentIntakeKcal)
   const unitSystem = useAppStore((s) => s.unitSystem)
   const [horizon, setHorizon] = useState<Horizon>(26)
 
   const maintenance = energy.total.value
-  const plan = caloriePlan(goal, maintenance, profile.weightKg, profile.sex)
-  const preset = getGoalPreset(goal)
+  const isCustom = goal === 'custom'
+  const plan = isCustom
+    ? customCaloriePlan(customKcal, maintenance, profile.sex)
+    : caloriePlan(goal, maintenance, profile.weightKg, profile.sex)
 
   const points = projectWeight({
     startWeightKg: profile.weightKg,
@@ -71,15 +83,28 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
   const projected = points[points.length - 1]
   const totalChangeKg = projected.weightKg - profile.weightKg
 
-  const macros = macroTargets(plan.targetKcal, profile.weightKg, goal)
+  // Direction of a custom target decides its default protein recommendation.
+  const macroGoal = isCustom
+    ? plan.dailyDeltaKcal < -50
+      ? 'moderateLoss'
+      : plan.dailyDeltaKcal > 50
+        ? 'moderateGain'
+        : 'maintain'
+    : goal
+  const macros = macroSplit
+    ? macroTargetsFromSplit(plan.targetKcal, profile.weightKg, macroSplit)
+    : macroTargets(plan.targetKcal, profile.weightKg, macroGoal)
+
   const [foodOpen, setFoodOpen] = useState(false)
   const [foodVariant, setFoodVariant] = useState(0)
   const days = exampleDays(plan.targetKcal, foodVariant)
 
+  const showTrajectory = isCustom || goal !== 'maintain'
+
   return (
     <Card
       title="Your plan"
-      subtitle="Pick a goal and see what to eat — and where it takes you"
+      subtitle="Pick a goal and see what to eat, and where it takes you"
     >
       <div className="field">
         <span className="field-label">Goal</span>
@@ -87,10 +112,31 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
           vertical
           ariaLabel="Goal"
           value={goal}
-          options={GOAL_PRESETS.map((g) => ({ value: g.id, label: g.label }))}
+          options={[
+            ...GOAL_PRESETS.map((g) => ({ value: g.id, label: g.label })),
+            { value: 'custom' as const, label: 'Custom calorie target' },
+          ]}
           onChange={setGoal}
         />
-        <p className="helper-text">{preset.description}</p>
+        {isCustom ? (
+          <div className="custom-goal">
+            <InputSlider
+              label="Daily calories"
+              display={`${customKcal.toLocaleString('en-US')} kcal`}
+              value={customKcal}
+              min={1000}
+              max={6000}
+              step={50}
+              onChange={setCustomKcal}
+            />
+            <p className="helper-text">
+              Set your own exact daily calorie target. Your burn is around{' '}
+              {Math.round(maintenance).toLocaleString('en-US')} kcal/day.
+            </p>
+          </div>
+        ) : (
+          <p className="helper-text">{getGoalPreset(goal).description}</p>
+        )}
       </div>
 
       <InsightTip anchor="plan" rotation={GOAL_PRESETS.findIndex((g) => g.id === goal)} />
@@ -109,7 +155,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
         <div className="plan-number">
           <span className="plan-number-label">Expected pace</span>
           <strong>
-            {plan.weeklyChangeKg === 0
+            {Math.abs(plan.weeklyChangeKg) < 0.005
               ? '±0'
               : formatWeightDelta(plan.weeklyChangeKg, unitSystem).split(' ')[0]}
           </strong>
@@ -121,13 +167,26 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
 
       {plan.floorApplied && (
         <p className="plan-warning">
-          ⚠️ We raised this target to {plan.targetKcal.toLocaleString('en-US')}{' '}
-          kcal — going lower makes it very hard to get the nutrients you need
-          without medical supervision. The pace shown reflects the safer target.
+          {isCustom ? (
+            <>
+              ⚠️ {plan.targetKcal.toLocaleString('en-US')} kcal/day is below the
+              recommended minimum of {CALORIE_FLOOR[profile.sex].toLocaleString('en-US')}{' '}
+              kcal for {profile.sex === 'female' ? 'women' : 'men'}. Below that,
+              it is very hard to get the nutrients you need, so this should only
+              be done under medical supervision.
+            </>
+          ) : (
+            <>
+              ⚠️ We raised this target to{' '}
+              {plan.targetKcal.toLocaleString('en-US')} kcal. Going lower makes
+              it very hard to get the nutrients you need without medical
+              supervision. The pace shown reflects the safer target.
+            </>
+          )}
         </p>
       )}
 
-      {goal !== 'maintain' && (
+      {showTrajectory && (
         <>
           <div className="field plan-horizon">
             <Segmented
@@ -150,7 +209,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
             {Math.round(horizon / 4.345)} months (
             {formatWeightDelta(totalChangeKg, unitSystem)}). The curve bends
             because a {totalChangeKg < 0 ? 'lighter' : 'heavier'} body burns{' '}
-            {totalChangeKg < 0 ? 'fewer' : 'more'} calories — that's why
+            {totalChangeKg < 0 ? 'fewer' : 'more'} calories, which is why
             plateaus are normal, not failure.
           </p>
         </>
@@ -173,10 +232,20 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
           </div>
         </div>
         <p className="helper-text">
-          Protein set at {macros.proteinPerKg} g per kg bodyweight —{' '}
-          {goal.includes('Loss')
-            ? 'extra high while losing, to protect your muscle and keep you full.'
-            : 'enough to build and maintain muscle.'}
+          {macroSplit ? (
+            <>
+              Using your custom split: {macroSplit.proteinPct}% protein /{' '}
+              {macroSplit.carbsPct}% carbs / {macroSplit.fatPct}% fat (that's{' '}
+              {macros.proteinPerKg} g protein per kg bodyweight).
+            </>
+          ) : (
+            <>
+              Protein set at {macros.proteinPerKg} g per kg bodyweight,{' '}
+              {macroGoal.includes('Loss')
+                ? 'extra high while losing, to protect your muscle and keep you full.'
+                : 'enough to build and maintain muscle.'}
+            </>
+          )}
         </p>
       </div>
 
@@ -199,12 +268,12 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
             <div className="food-days">
               <FoodDay
                 day={days.best}
-                title="Whole foods — a full day"
+                title="Whole foods, a full day"
                 emoji="🥗"
               />
               <FoodDay
                 day={days.worst}
-                title="Fast food — gone fast"
+                title="Fast food, gone fast"
                 emoji="🍔"
               />
             </div>
@@ -219,7 +288,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
               </button>
             </div>
             <p className="helper-text">
-              Same calories — very different amounts of food. That's why food
+              Same calories, very different amounts of food. That's why food
               choice matters more than willpower.
             </p>
           </>
@@ -249,12 +318,12 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
                 {Math.abs(Math.round(currentIntakeKcal - maintenance)).toLocaleString('en-US')}{' '}
                 kcal/day {currentIntakeKcal >= maintenance ? 'above' : 'below'}
               </strong>{' '}
-              your estimated burn — long-term that drifts toward{' '}
+              your estimated burn. Long-term that drifts toward{' '}
               {formatWeight(
                 equilibriumWeightKg(profile.weightKg, currentIntakeKcal, tdeeAt),
                 unitSystem,
               )}
-              . Remember: most people underestimate what they eat by 20–50%.
+              . Remember: most people underestimate what they eat by 20 to 50%.
             </p>
           </>
         )}

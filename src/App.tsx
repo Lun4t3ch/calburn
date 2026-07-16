@@ -24,10 +24,10 @@ function App() {
   }, [theme])
 
   // Advanced inputs (body fat %, macros, steps, exercise override) apply
-  // whenever their toggles are on — they're simply undefined otherwise.
+  // whenever their toggles are on, they're simply undefined otherwise.
   const energy = energyBreakdown({ profile, activity, macros })
 
-  // Maintenance as a function of bodyweight — drives the adaptive projection.
+  // Maintenance as a function of bodyweight, drives the adaptive projection.
   const tdeeAt = (weightKg: number) =>
     energyBreakdown({
       profile: { ...profile, weightKg },
@@ -66,7 +66,7 @@ function App() {
             </button>
           </div>
         </div>
-        <p className="tagline">Know your burn — honest, science-based estimates</p>
+        <p className="tagline">Know your burn. Honest, science-based estimates</p>
       </header>
 
       <main className="app-main">
@@ -86,7 +86,7 @@ function App() {
           <span className="footer-badge">📴 Works offline</span>
         </p>
         <p>
-          CalBurn uses established scientific methods — Mifflin-St Jeor and
+          CalBurn uses established scientific methods: Mifflin-St Jeor and
           Katch-McArdle for resting burn, the Compendium of Physical Activities
           for movement, and a dynamic model (à la the NIH Body Weight Planner)
           for weight projection. These are the best possible estimates, not
@@ -96,7 +96,7 @@ function App() {
         </p>
         <p>
           Everything is calculated in your browser and saved only on this
-          device — nothing you enter is ever sent anywhere. CalBurn is an
+          device. Nothing you enter is ever sent anywhere. CalBurn is an
           educational tool, not medical advice; check with a doctor or dietitian
           before big changes, especially if you're pregnant, under 18, or have a
           health condition.

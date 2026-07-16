@@ -34,7 +34,7 @@ export function ComponentCard({
         <span className="component-dot" style={{ background: color }} aria-hidden />
         <span className="component-card-title">
           <span aria-hidden>{emoji}</span> {shortName}
-          <span className="component-card-name"> — {name}</span>
+          <span className="component-card-name">, {name}</span>
         </span>
         <span className="component-card-numbers">
           <strong>{Math.round(kcal).toLocaleString('en-US')}</strong> kcal ·{' '}

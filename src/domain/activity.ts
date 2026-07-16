@@ -7,7 +7,7 @@
  * lands on the conventional PAL multipliers (sedentary ≈ 1.2 ... heavy
  * physical work ≈ 1.9; FAO/WHO/UNU 2001, McArdle & Katch).
  *
- * EAT uses net METs — (MET − 1) × kg × hours — so resting burn is not
+ * EAT uses net METs, (MET − 1) × kg × hours, so resting burn is not
  * double-counted when summed with BMR (Compendium of Physical Activities).
  */
 
@@ -17,7 +17,7 @@ import type { ActivityInputs, JobActivity, LeisureActivity } from './types'
 /** NEAT from occupation, as a fraction of BMR. */
 export const JOB_NEAT_FACTOR: Record<JobActivity, number> = {
   seated: 0.08, // desk job → overall PAL ≈ 1.2 with TEF
-  seatedWithMovement: 0.2, // PAL ≈ 1.3–1.4
+  seatedWithMovement: 0.2, // PAL ≈ 1.3 to 1.4
   standing: 0.3, // PAL ≈ 1.5
   physical: 0.5, // PAL ≈ 1.7
   heavyManual: 0.7, // PAL ≈ 1.9

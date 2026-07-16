@@ -24,7 +24,7 @@ export function ActivitySection() {
           ariaLabel="Job activity"
           value={activity.job}
           options={[
-            { value: 'seated', label: 'Mostly seated (desk job)' },
+            { value: 'seated', label: 'Mostly seated (desk job or student)' },
             { value: 'seatedWithMovement', label: 'Seated, but often up and about' },
             { value: 'standing', label: 'On my feet most of the day' },
             { value: 'physical', label: 'Physically active work' },

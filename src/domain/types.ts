@@ -35,9 +35,9 @@ export interface ActivityInputs {
   job: JobActivity
   leisure: LeisureActivity
   workouts: Workout[]
-  /** Advanced: average daily steps — replaces the leisure estimate when set. */
+  /** Advanced: average daily steps, replaces the leisure estimate when set. */
   stepsPerDay?: number
-  /** Advanced: exact average exercise kcal/day (e.g. from a watch) — overrides workout estimate. */
+  /** Advanced: exact average exercise kcal/day (e.g. from a watch), overrides workout estimate. */
   exerciseKcalPerDayOverride?: number
 }
 
@@ -73,3 +73,12 @@ export type GoalId =
   | 'leanGain'
   | 'moderateGain'
   | 'significantGain'
+  /** User sets an exact daily calorie target themselves. */
+  | 'custom'
+
+/** A percentage distribution of calories across the three macros (sums to 100). */
+export interface MacroSplit {
+  proteinPct: number
+  carbsPct: number
+  fatPct: number
+}

@@ -1,9 +1,9 @@
 /**
- * TEF — thermic effect of food: calories burned digesting and processing
+ * TEF, thermic effect of food: calories burned digesting and processing
  * what you eat.
  *
  * Mixed diet default ≈ 10% of intake. Per macronutrient (Westerterp 2004):
- * protein 20–30%, carbs 5–10%, fat 0–3%, alcohol ~10–30% — midpoints used.
+ * protein 20 to 30%, carbs 5 to 10%, fat 0 to 3%, alcohol ~10 to 30%, midpoints used.
  */
 
 import type { MacroIntake } from './types'

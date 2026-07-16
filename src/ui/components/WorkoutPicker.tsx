@@ -31,7 +31,7 @@ export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
   return (
     <div className="workout-picker">
       {workouts.length === 0 && (
-        <p className="workout-empty">No regular workouts — that's fine too.</p>
+        <p className="workout-empty">No regular workouts. That's fine too.</p>
       )}
       {workouts.map((w, i) => (
         <div key={i} className="workout-row">

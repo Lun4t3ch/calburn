@@ -1,4 +1,4 @@
-/** Basics: sex, age, height, weight — with metric/imperial-aware sliders. */
+/** Basics: sex, age, height, weight, with metric/imperial-aware sliders. */
 
 import { Card } from '../components/Card'
 import { InputSlider } from '../components/InputSlider'

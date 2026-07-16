@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { macroTargets } from '../src/domain/macros'
+import { macroTargets, macroTargetsFromSplit } from '../src/domain/macros'
 
 describe('macroTargets', () => {
   it('cutting: high protein (2.2 g/kg), fat ≥ 20% of calories, carbs fill the rest', () => {
@@ -33,5 +33,34 @@ describe('macroTargets', () => {
     const t = macroTargets(1200, 100, 'aggressiveLoss')
     expect(t.carbsG).toBeGreaterThanOrEqual(0)
     expect(t.proteinG).toBeGreaterThanOrEqual(0)
+  })
+
+  it('custom goal uses the maintenance protein default', () => {
+    expect(macroTargets(2400, 80, 'custom').proteinPerKg).toBe(1.6)
+  })
+})
+
+describe('macroTargetsFromSplit', () => {
+  it('converts a percentage split into grams', () => {
+    // 2000 kcal at 30/40/30: protein 600/4=150 g, carbs 800/4=200 g, fat 600/9≈67 g
+    const t = macroTargetsFromSplit(2000, 80, {
+      proteinPct: 30,
+      carbsPct: 40,
+      fatPct: 30,
+    })
+    expect(t.proteinG).toBe(150)
+    expect(t.carbsG).toBe(200)
+    expect(t.fatG).toBe(67)
+    expect(t.proteinPerKg).toBeCloseTo(1.9, 1)
+  })
+
+  it('grams re-sum to the target calories (within rounding)', () => {
+    const t = macroTargetsFromSplit(2350, 70, {
+      proteinPct: 25,
+      carbsPct: 50,
+      fatPct: 25,
+    })
+    const kcal = t.proteinG * 4 + t.carbsG * 4 + t.fatG * 9
+    expect(Math.abs(kcal - 2350)).toBeLessThan(15)
   })
 })

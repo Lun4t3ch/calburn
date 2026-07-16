@@ -1,7 +1,7 @@
 /**
  * Weight trajectory line chart (single series).
  * 2px teal line, recessive grid, crosshair + tooltip on hover/touch,
- * direct label on the end point. No legend — the card title names it.
+ * direct label on the end point. No legend, the card title names it.
  */
 
 import { useRef, useState } from 'react'

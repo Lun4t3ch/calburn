@@ -1,12 +1,12 @@
 /**
  * Weight goals: from "aggressive weight loss" to "significant weight gain".
  *
- * Rates are % of bodyweight per week (safe-loss guidance: 0.5–1% BW/week;
- * lean-gain guidance ~0.25–1% BW/month — Aragon; ISSN/ACSM position stands).
+ * Rates are % of bodyweight per week (safe-loss guidance: 0.5 to 1% BW/week;
+ * lean-gain guidance ~0.25 to 1% BW/month, Aragon; ISSN/ACSM position stands).
  * Daily calorie delta uses 7700 kcal ≈ 1 kg as the planning conversion;
  * long-term trajectories use the adaptive model in projection.ts instead.
  *
- * Calorie floors: 1,200 kcal/day (women) and 1,500 kcal/day (men) — below
+ * Calorie floors: 1,200 kcal/day (women) and 1,500 kcal/day (men), below
  * these, meeting nutrient needs is hard without medical supervision
  * (ACSM / Academy of Nutrition and Dietetics guidance).
  */
@@ -27,19 +27,19 @@ export const GOAL_PRESETS: GoalPreset[] = [
   {
     id: 'aggressiveLoss',
     label: 'Aggressive weight loss',
-    description: 'Fast results, hard to sustain — about 1% of bodyweight per week',
+    description: 'Fast results, hard to sustain: about 1% of bodyweight per week',
     weeklyRatePct: -1.0,
   },
   {
     id: 'moderateLoss',
     label: 'Moderate weight loss',
-    description: 'The sweet spot for most people — about 0.5% per week',
+    description: 'The sweet spot for most people: about 0.5% per week',
     weeklyRatePct: -0.5,
   },
   {
     id: 'mildLoss',
     label: 'Gentle weight loss',
-    description: 'Slow and easy to live with — about 0.25% per week',
+    description: 'Slow and easy to live with: about 0.25% per week',
     weeklyRatePct: -0.25,
   },
   {
@@ -51,19 +51,19 @@ export const GOAL_PRESETS: GoalPreset[] = [
   {
     id: 'leanGain',
     label: 'Lean muscle gain',
-    description: 'Slow gain that minimizes fat — about 0.1% per week',
+    description: 'Slow gain that minimizes fat: about 0.1% per week',
     weeklyRatePct: 0.1,
   },
   {
     id: 'moderateGain',
     label: 'Moderate weight gain',
-    description: 'Steady gaining — about 0.2% per week',
+    description: 'Steady gaining: about 0.2% per week',
     weeklyRatePct: 0.2,
   },
   {
     id: 'significantGain',
     label: 'Significant weight gain',
-    description: 'Fast gaining, some fat comes along — about 0.35% per week',
+    description: 'Fast gaining, some fat comes along: about 0.35% per week',
     weeklyRatePct: 0.35,
   },
 ]
@@ -119,5 +119,25 @@ export function caloriePlan(
     dailyDeltaKcal: effectiveDelta,
     weeklyChangeKg: effectiveWeeklyKg,
     floorApplied,
+  }
+}
+
+/**
+ * Plan from a user-chosen exact calorie target. The target is NOT clamped
+ * to the safe floor; the UI shows a warning instead (floorApplied signals
+ * that the chosen target sits below it).
+ */
+export function customCaloriePlan(
+  targetKcal: number,
+  maintenanceKcal: number,
+  sex: Sex,
+): CaloriePlan {
+  const dailyDeltaKcal = targetKcal - maintenanceKcal
+  return {
+    goal: 'custom',
+    targetKcal,
+    dailyDeltaKcal,
+    weeklyChangeKg: (dailyDeltaKcal * 7) / KCAL_PER_KG,
+    floorApplied: targetKcal < CALORIE_FLOOR[sex],
   }
 }

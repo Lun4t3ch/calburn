@@ -21,7 +21,7 @@ const SLOT_ORDER: MealSlot[] = ['breakfast', 'lunch', 'dinner', 'snack']
 
 /**
  * Greedily fill a day: one breakfast, one lunch, one dinner (as budget
- * allows), then snacks — repeating snacks until the target is reached
+ * allows), then snacks, repeating snacks until the target is reached
  * within half of the smallest snack's calories.
  *
  * `variant` rotates which meal is picked per slot, so users can cycle

@@ -3,7 +3,7 @@
  *
  * Instead of the flat "7700 kcal = 1 kg forever" rule (which overpredicts
  * long-term change), we re-estimate the full energy expenditure at the
- * projected weight each week — a lighter body burns less, so the curve
+ * projected weight each week, a lighter body burns less, so the curve
  * flattens toward a new equilibrium, mirroring the behavior of dynamic
  * models like Hall et al. (Lancet 2011) / the NIH Body Weight Planner.
  */

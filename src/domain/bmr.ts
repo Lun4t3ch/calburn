@@ -1,7 +1,7 @@
 /**
  * BMR / RMR prediction equations (kcal/day).
  *
- * Default engine: Mifflin-St Jeor — recommended by the Academy of Nutrition
+ * Default engine: Mifflin-St Jeor, recommended by the Academy of Nutrition
  * and Dietetics as the most reliable equation for the general population
  * (within ±10% of measured RMR for ~82% of non-obese and ~70% of obese
  * adults; Frankenfield et al. 2005).

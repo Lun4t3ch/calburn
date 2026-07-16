@@ -43,7 +43,7 @@ export function energyBreakdown({
     tef = total * MIXED_DIET_TEF_FRACTION
   }
 
-  // Scale the whole-day band by the BMR band's relative uncertainty —
+  // Scale the whole-day band by the BMR band's relative uncertainty -
   // BMR is the dominant and best-studied error source.
   const relLow = bmrBand.low / bmrBand.value
   const relHigh = bmrBand.high / bmrBand.value

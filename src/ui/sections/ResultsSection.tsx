@@ -23,25 +23,25 @@ const COMPONENT_INFO: Record<
     emoji: '🫀',
     name: 'resting burn',
     explanation:
-      'Your basal metabolic rate: the energy your body uses just staying alive — heartbeat, breathing, brain, body temperature. It runs 24/7, even if you never leave bed, and is usually the biggest slice by far.',
+      'Your basal metabolic rate: the energy your body uses just staying alive: heartbeat, breathing, brain, body temperature. It runs 24/7, even if you never leave bed, and is usually the biggest slice by far.',
   },
   neat: {
     emoji: '🚶',
     name: 'everyday movement',
     explanation:
-      'Non-exercise activity thermogenesis: everything that is movement but not a workout — your job, walking, chores, even fidgeting. This is the part that differs most between people, and often burns more than the gym does.',
+      'Non-exercise activity thermogenesis: everything that is movement but not a workout: your job, walking, chores, even fidgeting. This is the part that differs most between people, and often burns more than the gym does.',
   },
   tef: {
     emoji: '🍽️',
     name: 'digesting food',
     explanation:
-      'The thermic effect of food: digesting and processing what you eat costs energy — roughly 10% of your intake. Protein is the most expensive to digest (20–30% of its calories), fat the cheapest (0–3%).',
+      'The thermic effect of food: digesting and processing what you eat costs energy, roughly 10% of your intake. Protein is the most expensive to digest (20 to 30% of its calories), fat the cheapest (0 to 3%).',
   },
   eat: {
     emoji: '🏋️',
     name: 'workouts',
     explanation:
-      'Exercise activity thermogenesis: your deliberate training. Important for health and fitness — but usually a smaller slice of daily burn than people expect. Consistency in everyday movement often matters more for calories.',
+      'Exercise activity thermogenesis: your deliberate training. Important for health and fitness, but usually a smaller slice of daily burn than people expect. Consistency in everyday movement often matters more for calories.',
   },
 }
 
@@ -79,7 +79,7 @@ export function ResultsSection({ energy }: ResultsSectionProps) {
         ≈ <strong>{fmt(energy.total.value)}</strong> kcal
         <span className="results-range">
           {' '}
-          ({fmt(energy.total.low)} – {fmt(energy.total.high)})
+          ({fmt(energy.total.low)} - {fmt(energy.total.high)})
         </span>
       </p>
 
@@ -116,9 +116,9 @@ export function ResultsSection({ energy }: ResultsSectionProps) {
       <InsightTip anchor="results" rotation={openCard ? 1 : 0} />
 
       <p className="results-honesty">
-        This is a starting estimate from established equations — individual
+        This is a starting estimate from established equations. Individual
         metabolisms vary by ±10% or more. The real test: watch your weight
-        trend over 2–3 weeks and adjust.
+        trend over 2 to 3 weeks and adjust.
       </p>
     </Card>
   )

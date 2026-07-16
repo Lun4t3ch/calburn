@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { CALORIE_FLOOR, GOAL_PRESETS, caloriePlan } from '../src/domain/goals'
+import {
+  CALORIE_FLOOR,
+  GOAL_PRESETS,
+  caloriePlan,
+  customCaloriePlan,
+} from '../src/domain/goals'
 
 describe('caloriePlan', () => {
   it('moderate loss: 0.5% BW/week as a deficit', () => {
@@ -42,5 +47,23 @@ describe('caloriePlan', () => {
     const rates = GOAL_PRESETS.map((g) => g.weeklyRatePct)
     const sorted = [...rates].sort((a, b) => a - b)
     expect(rates).toEqual(sorted)
+  })
+})
+
+describe('customCaloriePlan', () => {
+  it('computes pace from the exact target', () => {
+    // 2,000 target vs 2,550 maintenance: 550/day deficit -> -0.5 kg/week
+    const plan = customCaloriePlan(2000, 2550, 'male')
+    expect(plan.goal).toBe('custom')
+    expect(plan.targetKcal).toBe(2000)
+    expect(plan.dailyDeltaKcal).toBe(-550)
+    expect(plan.weeklyChangeKg).toBeCloseTo(-0.5, 2)
+    expect(plan.floorApplied).toBe(false)
+  })
+
+  it('does NOT clamp below-floor targets, but flags them', () => {
+    const plan = customCaloriePlan(1000, 2000, 'female')
+    expect(plan.targetKcal).toBe(1000) // kept as entered
+    expect(plan.floorApplied).toBe(true) // warning flag
   })
 })

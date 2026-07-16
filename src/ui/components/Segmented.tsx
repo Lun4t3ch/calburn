@@ -1,4 +1,4 @@
-/** Generic segmented control — used for sex, units, mode, job, leisure. */
+/** Generic segmented control, used for sex, units, mode, job, leisure. */
 
 interface SegmentedOption<T extends string> {
   value: T

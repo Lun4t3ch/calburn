@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CalBurn theme — "liquid glass": frosted translucent panels over an ambient
+   CalBurn theme, "liquid glass": frosted translucent panels over an ambient
    gradient backdrop. Light & dark are both first-class (toggle in header;
    JS stamps data-theme on <html>). Chart palettes validated per mode.
    ========================================================================== */
@@ -11,14 +11,14 @@
   --color-primary-soft: rgba(13, 148, 136, 0.12);
   --color-accent: #f59e0b;
 
-  /* Energy component colors (stacked bar + charts) —
+  /* Energy component colors (stacked bar + charts) -
      categorical palette validated for CVD separation & 3:1 contrast (light) */
   --color-bmr: #0d9488;
   --color-neat: #0369a1;
   --color-tef: #7c3aed;
   --color-eat: #d97706;
 
-  /* Backdrop artwork — soft botanical scene the glass frosts over */
+  /* Backdrop artwork, soft botanical scene the glass frosts over */
   --color-bg: #e9ece6;
   --bg-image: url('/bg-light.svg');
 
@@ -26,7 +26,7 @@
   --color-brand-cal: var(--color-primary-strong);
   --color-brand-burn: #0284c7; /* light-blue companion to the teal */
 
-  /* Glass surfaces — translucent enough to show the scene, frosted enough
+  /* Glass surfaces, translucent enough to show the scene, frosted enough
      to keep every word readable */
   --glass-surface: rgba(255, 255, 255, 0.38);
   --glass-sheen: linear-gradient(
@@ -72,7 +72,7 @@
   --color-accent: #fbbf24;
 
   /* Chart palette re-tuned & re-validated for the dark surface
-     (L 0.48–0.67 band, CVD separation + 3:1 contrast all pass) */
+     (L 0.48 to 0.67 band, CVD separation + 3:1 contrast all pass) */
   --color-bmr: #0d9488;
   --color-neat: #f43f5e;
   --color-tef: #8b5cf6;
@@ -98,7 +98,7 @@
   --color-border: rgba(255, 255, 255, 0.1);
 
   --color-text: #f5f5f4;
-  --color-text-muted: #a8a29e;
+  --color-text-muted: #cbc6c0; /* brighter than stone-400 for readability on glass */
 
   --color-tip-bg: rgba(45, 212, 191, 0.1);
   --color-tip-border: rgba(45, 212, 191, 0.25);
