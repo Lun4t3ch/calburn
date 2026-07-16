@@ -1,8 +1,8 @@
 import { Segmented } from './ui/components/Segmented'
 import { ProfileSection } from './ui/sections/ProfileSection'
 import { ActivitySection } from './ui/sections/ActivitySection'
+import { ResultsSection } from './ui/sections/ResultsSection'
 import { energyBreakdown } from './domain/tdee'
-import { formatKcal } from './lib/format'
 import { useAppStore } from './state/store'
 
 function App() {
@@ -54,17 +54,7 @@ function App() {
       <main className="app-main">
         <ProfileSection />
         <ActivitySection />
-
-        {/* Temporary preview — replaced by the full results view in Phase 4 */}
-        <section className="card">
-          <p className="preview-total">
-            You burn about <strong>{formatKcal(energy.total.value)}</strong> per
-            day{' '}
-            <span className="preview-range">
-              ({formatKcal(energy.total.low)} – {formatKcal(energy.total.high)})
-            </span>
-          </p>
-        </section>
+        <ResultsSection energy={energy} />
       </main>
 
       <footer className="app-footer">

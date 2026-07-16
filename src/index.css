@@ -296,17 +296,147 @@ input[type='range'] {
   cursor: pointer;
 }
 
-/* ---------- Temporary results preview ---------- */
+/* ---------- Results ---------- */
 
-.preview-total {
-  margin: 0;
-  font-size: 1.05rem;
-  text-align: center;
+.results-period {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
 }
 
-.preview-range {
+.results-total {
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-total strong {
+  color: var(--color-primary-strong);
+}
+
+.results-range {
+  display: block;
   color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.1rem;
+}
+
+.energy-bar {
+  display: flex;
+  width: 100%;
+  height: 44px;
+  border-radius: var(--radius-control);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.energy-bar-segment {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: filter 0.15s, transform 0.15s;
+  min-width: 4px;
+}
+
+.energy-bar-segment:hover {
+  filter: brightness(1.08);
+}
+
+.energy-bar-selected {
+  filter: brightness(1.12);
+  outline: 2px solid var(--color-text);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.energy-bar-label {
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+}
+
+.component-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.component-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: 0.7rem 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.component-card:hover {
+  border-color: var(--color-primary);
+}
+
+.component-card-open {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.component-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.component-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.component-card-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  flex: 1;
+  min-width: 130px;
+}
+
+.component-card-name {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.component-card-numbers {
   font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.component-card-numbers strong {
+  color: var(--color-text);
+}
+
+.component-card-explanation {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.results-honesty {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.4;
 }
 
 /* ---------- Footer ---------- */
