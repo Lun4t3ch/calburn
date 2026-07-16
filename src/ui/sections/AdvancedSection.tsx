@@ -6,6 +6,7 @@
 
 import { Card } from '../components/Card'
 import { InputSlider } from '../components/InputSlider'
+import { InsightTip } from '../components/InsightTip'
 import { OptionalBlock } from '../components/OptionalBlock'
 import { macroKcal } from '../../domain/tef'
 import { useAppStore } from '../../state/store'
@@ -139,6 +140,8 @@ export function AdvancedSection() {
           as a rough guide.
         </p>
       </OptionalBlock>
+
+      <InsightTip anchor="advanced" rotation={macros ? macros.proteinG : 0} />
     </Card>
   )
 }

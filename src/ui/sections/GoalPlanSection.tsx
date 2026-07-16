@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import { Card } from '../components/Card'
 import { InputSlider } from '../components/InputSlider'
+import { InsightTip } from '../components/InsightTip'
 import { OptionalBlock } from '../components/OptionalBlock'
 import { Segmented } from '../components/Segmented'
 import { TrajectoryChart } from '../components/TrajectoryChart'
@@ -90,6 +91,8 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
         />
         <p className="helper-text">{preset.description}</p>
       </div>
+
+      <InsightTip anchor="plan" rotation={GOAL_PRESETS.findIndex((g) => g.id === goal)} />
 
       <div className="plan-numbers">
         <div className="plan-number">

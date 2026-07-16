@@ -38,6 +38,7 @@ export interface AppState {
   setCurrentIntakeKcal: (kcal: number | undefined) => void
   setTipsEnabled: (enabled: boolean) => void
   dismissTip: (id: string) => void
+  resetDismissedTips: () => void
 }
 
 export const DEFAULT_PROFILE: Profile = {
@@ -82,6 +83,7 @@ export const useAppStore = create<AppState>()(
             ? s.dismissedTips
             : [...s.dismissedTips, id],
         })),
+      resetDismissedTips: () => set({ dismissedTips: [] }),
     }),
     { name: 'calburn' },
   ),

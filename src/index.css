@@ -739,6 +739,97 @@ input[type='range'] {
   line-height: 1.4;
 }
 
+/* ---------- Insight tips ---------- */
+
+.insight-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: var(--color-primary-soft);
+  border: 1px solid #99f6e4;
+  border-radius: var(--radius-control);
+  padding: 0.7rem 0.8rem;
+  margin-top: 1rem;
+}
+
+.insight-tip-motivation {
+  background: #ecfccb;
+  border-color: #bef264;
+}
+
+.insight-tip-body {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.insight-tip-icon {
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.insight-tip-text {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.insight-tip-source {
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.insight-tip-close {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.1rem 0.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.insight-tip-close:hover {
+  color: var(--color-text);
+}
+
+/* ---------- Settings bar ---------- */
+
+.settings-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  padding: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.settings-check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.settings-check input {
+  accent-color: var(--color-primary);
+}
+
+.settings-reset {
+  border: none;
+  background: transparent;
+  color: var(--color-primary-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ---------- Footer ---------- */
 
 .app-footer {

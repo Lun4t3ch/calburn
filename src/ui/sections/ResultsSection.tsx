@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Card } from '../components/Card'
 import { ComponentCard } from '../components/ComponentCard'
+import { InsightTip } from '../components/InsightTip'
 import { Segmented } from '../components/Segmented'
 import {
   ENERGY_COMPONENTS,
@@ -111,6 +112,8 @@ export function ResultsSection({ energy }: ResultsSectionProps) {
           )
         })}
       </div>
+
+      <InsightTip anchor="results" rotation={openCard ? 1 : 0} />
 
       <p className="results-honesty">
         This is a starting estimate from established equations — individual

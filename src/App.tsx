@@ -1,4 +1,6 @@
+import { InsightTip } from './ui/components/InsightTip'
 import { Segmented } from './ui/components/Segmented'
+import { SettingsBar } from './ui/components/SettingsBar'
 import { ProfileSection } from './ui/sections/ProfileSection'
 import { ActivitySection } from './ui/sections/ActivitySection'
 import { AdvancedSection } from './ui/sections/AdvancedSection'
@@ -80,6 +82,8 @@ function App() {
         {advanced && <AdvancedSection />}
         <ResultsSection energy={energy} />
         <GoalPlanSection energy={energy} profile={effProfile} tdeeAt={tdeeAt} />
+        <InsightTip anchor="motivation" rotation={activity.workouts.length} />
+        <SettingsBar />
       </main>
 
       <footer className="app-footer">

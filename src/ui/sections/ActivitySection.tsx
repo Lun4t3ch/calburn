@@ -1,6 +1,7 @@
 /** How active: job type, everyday movement, and regular workouts. */
 
 import { Card } from '../components/Card'
+import { InsightTip } from '../components/InsightTip'
 import { Segmented } from '../components/Segmented'
 import { WorkoutPicker } from '../components/WorkoutPicker'
 import { useAppStore } from '../../state/store'
@@ -8,6 +9,8 @@ import { useAppStore } from '../../state/store'
 export function ActivitySection() {
   const activity = useAppStore((s) => s.activity)
   const setActivity = useAppStore((s) => s.setActivity)
+  // Rotate which contextual tip shows as the user edits this section.
+  const rotation = activity.workouts.length
 
   return (
     <Card
@@ -52,6 +55,8 @@ export function ActivitySection() {
           onChange={(workouts) => setActivity({ workouts })}
         />
       </div>
+
+      <InsightTip anchor="activity" rotation={rotation} />
     </Card>
   )
 }
