@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { InsightTip } from './ui/components/InsightTip'
 import { Segmented } from './ui/components/Segmented'
 import { SettingsBar } from './ui/components/SettingsBar'
@@ -13,36 +14,25 @@ function App() {
   const profile = useAppStore((s) => s.profile)
   const activity = useAppStore((s) => s.activity)
   const macros = useAppStore((s) => s.macros)
-  const mode = useAppStore((s) => s.mode)
   const unitSystem = useAppStore((s) => s.unitSystem)
-  const setMode = useAppStore((s) => s.setMode)
+  const theme = useAppStore((s) => s.theme)
   const setUnitSystem = useAppStore((s) => s.setUnitSystem)
+  const setTheme = useAppStore((s) => s.setTheme)
 
-  // Advanced-only inputs stay saved when switching to easy mode, but only
-  // apply in advanced mode — easy mode gives the simple estimate.
-  const advanced = mode === 'advanced'
-  const effProfile = advanced ? profile : { ...profile, bodyFatPct: undefined }
-  const effActivity = advanced
-    ? activity
-    : {
-        ...activity,
-        stepsPerDay: undefined,
-        exerciseKcalPerDayOverride: undefined,
-      }
-  const effMacros = advanced ? macros : undefined
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
 
-  const energy = energyBreakdown({
-    profile: effProfile,
-    activity: effActivity,
-    macros: effMacros,
-  })
+  // Advanced inputs (body fat %, macros, steps, exercise override) apply
+  // whenever their toggles are on — they're simply undefined otherwise.
+  const energy = energyBreakdown({ profile, activity, macros })
 
   // Maintenance as a function of bodyweight — drives the adaptive projection.
   const tdeeAt = (weightKg: number) =>
     energyBreakdown({
-      profile: { ...effProfile, weightKg },
-      activity: effActivity,
-      macros: effMacros,
+      profile: { ...profile, weightKg },
+      activity,
+      macros,
     }).total.value
 
   return (
@@ -62,15 +52,16 @@ function App() {
               ]}
               onChange={setUnitSystem}
             />
-            <Segmented
-              ariaLabel="Mode"
-              value={mode}
-              options={[
-                { value: 'easy', label: 'Easy' },
-                { value: 'advanced', label: 'Advanced' },
-              ]}
-              onChange={setMode}
-            />
+            <button
+              type="button"
+              className="theme-toggle"
+              aria-label={
+                theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+              }
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
           </div>
         </div>
         <p className="tagline">Know your burn — honest, science-based estimates</p>
@@ -79,9 +70,9 @@ function App() {
       <main className="app-main">
         <ProfileSection />
         <ActivitySection />
-        {advanced && <AdvancedSection />}
+        <AdvancedSection />
         <ResultsSection energy={energy} />
-        <GoalPlanSection energy={energy} profile={effProfile} tdeeAt={tdeeAt} />
+        <GoalPlanSection energy={energy} profile={profile} tdeeAt={tdeeAt} />
         <InsightTip anchor="motivation" rotation={activity.workouts.length} />
         <SettingsBar />
       </main>

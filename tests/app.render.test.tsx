@@ -24,12 +24,22 @@ describe('<App /> end-to-end render', () => {
     }
   })
 
-  it('reveals advanced inputs when switching to advanced mode', () => {
+  it('reveals advanced inputs when expanding the optional advanced section', () => {
     render(<App />)
-    expect(screen.queryByText('Fine-tune')).toBeNull()
-    fireEvent.click(screen.getByRole('radio', { name: 'Advanced' }))
-    expect(screen.getByText('Fine-tune')).toBeTruthy()
+    expect(screen.queryByText('Body fat %')).toBeNull()
+    fireEvent.click(
+      screen.getByRole('button', { name: /optional advanced input/i }),
+    )
     expect(screen.getByText('Body fat %')).toBeTruthy()
+    expect(screen.getByText('Daily steps')).toBeTruthy()
+  })
+
+  it('has a light/dark theme toggle', () => {
+    render(<App />)
+    const toggle = screen.getByRole('button', { name: /switch to (dark|light) mode/i })
+    const before = document.documentElement.dataset.theme
+    fireEvent.click(toggle)
+    expect(document.documentElement.dataset.theme).not.toBe(before)
   })
 
   it('renders the goal planner with a food example day', () => {

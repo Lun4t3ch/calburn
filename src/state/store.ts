@@ -14,15 +14,17 @@ import type {
   UnitSystem,
 } from '../domain/types'
 
-export type Mode = 'easy' | 'advanced'
+export type Theme = 'light' | 'dark'
 
 export interface AppState {
   profile: Profile
   activity: ActivityInputs
-  /** Advanced mode: optional macro intake for precise TEF. */
+  /** Optional macro intake (advanced) for precise TEF. */
   macros?: MacroIntake
   unitSystem: UnitSystem
-  mode: Mode
+  theme: Theme
+  /** Whether the optional advanced-input section is expanded. */
+  advancedOpen: boolean
   goal: GoalId
   /** Optional: what the user estimates they currently eat (kcal/day). */
   currentIntakeKcal?: number
@@ -33,7 +35,8 @@ export interface AppState {
   setActivity: (patch: Partial<ActivityInputs>) => void
   setMacros: (macros: MacroIntake | undefined) => void
   setUnitSystem: (unitSystem: UnitSystem) => void
-  setMode: (mode: Mode) => void
+  setTheme: (theme: Theme) => void
+  setAdvancedOpen: (open: boolean) => void
   setGoal: (goal: GoalId) => void
   setCurrentIntakeKcal: (kcal: number | undefined) => void
   setTipsEnabled: (enabled: boolean) => void
@@ -54,6 +57,14 @@ export const DEFAULT_ACTIVITY: ActivityInputs = {
   workouts: [],
 }
 
+/** First visit: follow the device's appearance; the user can toggle after. */
+function systemTheme(): Theme {
+  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+    return 'dark'
+  }
+  return 'light'
+}
+
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
@@ -61,7 +72,8 @@ export const useAppStore = create<AppState>()(
       activity: DEFAULT_ACTIVITY,
       macros: undefined,
       unitSystem: 'metric',
-      mode: 'easy',
+      theme: systemTheme(),
+      advancedOpen: false,
       goal: 'maintain',
       currentIntakeKcal: undefined,
       tipsEnabled: true,
@@ -73,7 +85,8 @@ export const useAppStore = create<AppState>()(
         set((s) => ({ activity: { ...s.activity, ...patch } })),
       setMacros: (macros) => set({ macros }),
       setUnitSystem: (unitSystem) => set({ unitSystem }),
-      setMode: (mode) => set({ mode }),
+      setTheme: (theme) => set({ theme }),
+      setAdvancedOpen: (advancedOpen) => set({ advancedOpen }),
       setGoal: (goal) => set({ goal }),
       setCurrentIntakeKcal: (currentIntakeKcal) => set({ currentIntakeKcal }),
       setTipsEnabled: (tipsEnabled) => set({ tipsEnabled }),

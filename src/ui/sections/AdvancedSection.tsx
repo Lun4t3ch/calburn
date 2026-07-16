@@ -1,10 +1,10 @@
 /**
- * Advanced mode: body fat % (Katch-McArdle), macro intake (precise TEF),
- * daily steps (replaces the leisure estimate) and an exact exercise
- * calorie override. Everything optional — defaults stay honest.
+ * Optional advanced input, presented as a clearly-labeled expandable step in
+ * the flow: body fat % (Katch-McArdle), macro intake (precise TEF), daily
+ * steps (replaces the leisure estimate) and an exact exercise calorie
+ * override. Everything optional — defaults stay honest.
  */
 
-import { Card } from '../components/Card'
 import { InputSlider } from '../components/InputSlider'
 import { InsightTip } from '../components/InsightTip'
 import { OptionalBlock } from '../components/OptionalBlock'
@@ -20,12 +20,32 @@ export function AdvancedSection() {
   const setProfile = useAppStore((s) => s.setProfile)
   const setActivity = useAppStore((s) => s.setActivity)
   const setMacros = useAppStore((s) => s.setMacros)
+  const advancedOpen = useAppStore((s) => s.advancedOpen)
+  const setAdvancedOpen = useAppStore((s) => s.setAdvancedOpen)
 
   return (
-    <Card
-      title="Fine-tune"
-      subtitle="Optional details for a sharper estimate — skip anything you don't know"
-    >
+    <section className={`card advanced-card${advancedOpen ? ' advanced-card-open' : ''}`}>
+      <button
+        type="button"
+        className="advanced-header"
+        aria-expanded={advancedOpen}
+        onClick={() => setAdvancedOpen(!advancedOpen)}
+      >
+        <span className="advanced-badge">Advanced</span>
+        <span className="advanced-titles">
+          <span className="advanced-title">Optional advanced input</span>
+          <span className="advanced-subtitle">
+            Body fat %, macros, daily steps, exact exercise calories — for a
+            sharper estimate
+          </span>
+        </span>
+        <span className="advanced-chevron" aria-hidden>
+          {advancedOpen ? '▴' : '▾'}
+        </span>
+      </button>
+
+      {advancedOpen && (
+        <div className="advanced-body">
       <OptionalBlock
         label="Body fat %"
         hint="Unlocks a lean-mass formula (Katch-McArdle) — better if you know your number"
@@ -141,7 +161,9 @@ export function AdvancedSection() {
         </p>
       </OptionalBlock>
 
-      <InsightTip anchor="advanced" rotation={macros ? macros.proteinG : 0} />
-    </Card>
+          <InsightTip anchor="advanced" rotation={macros ? macros.proteinG : 0} />
+        </div>
+      )}
+    </section>
   )
 }
