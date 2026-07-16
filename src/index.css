@@ -60,31 +60,256 @@ body {
   padding: 1rem;
 }
 
+/* ---------- Header ---------- */
+
+.app-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .app-header h1 {
-  margin: 0.5rem 0 0;
-  font-size: 1.75rem;
+  margin: 0.25rem 0 0;
+  font-size: 1.6rem;
   color: var(--color-primary-strong);
+}
+
+.app-header-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .app-header .tagline {
   margin: 0.25rem 0 0;
   color: var(--color-text-muted);
+  font-size: 0.9rem;
 }
 
 .app-main {
   flex: 1;
-  padding: 1.5rem 0;
+  padding: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.placeholder {
+/* ---------- Cards ---------- */
+
+.card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 2rem;
-  text-align: center;
+  padding: 1.25rem;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.card-subtitle {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
   color: var(--color-text-muted);
 }
+
+.card-header {
+  margin-bottom: 1rem;
+}
+
+/* ---------- Fields & segmented controls ---------- */
+
+.field {
+  margin: 0 0 1.1rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.segmented {
+  display: inline-flex;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: 3px;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.segmented-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.segment {
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.9rem;
+  border-radius: calc(var(--radius-control) - 3px);
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.segmented-vertical .segment {
+  text-align: left;
+}
+
+.segment:hover {
+  color: var(--color-text);
+}
+
+.segment-active {
+  background: var(--color-surface);
+  color: var(--color-primary-strong);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+
+/* ---------- Sliders ---------- */
+
+.input-slider {
+  display: block;
+  margin: 0 0 1.1rem;
+}
+
+.input-slider:last-child {
+  margin-bottom: 0;
+}
+
+.input-slider-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+}
+
+.input-slider-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.input-slider-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--color-primary);
+  height: 28px; /* comfortable touch target */
+  margin: 0;
+}
+
+/* ---------- Workout picker ---------- */
+
+.workout-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.workout-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.workout-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.4rem 0.6rem;
+  align-items: center;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: 0.6rem;
+}
+
+.workout-row select {
+  grid-column: 1;
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  max-width: 100%;
+}
+
+.workout-remove {
+  grid-column: 2;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+}
+
+.workout-remove:hover {
+  color: #dc2626;
+}
+
+.workout-hours {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.workout-hours input {
+  flex: 1;
+}
+
+.workout-add {
+  align-self: flex-start;
+  border: 1px dashed var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+/* ---------- Temporary results preview ---------- */
+
+.preview-total {
+  margin: 0;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.preview-range {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- Footer ---------- */
 
 .app-footer {
   padding: 1rem 0 1.5rem;
