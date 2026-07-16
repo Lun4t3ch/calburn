@@ -19,19 +19,27 @@ export function ActivitySection() {
     >
       <div className="field">
         <span className="field-label">Your job / daily occupation</span>
-        <Segmented
-          vertical
-          ariaLabel="Job activity"
-          value={activity.job}
-          options={[
-            { value: 'seated', label: 'Mostly seated (desk job or student)' },
-            { value: 'seatedWithMovement', label: 'Seated, but often up and about' },
-            { value: 'standing', label: 'On my feet most of the day' },
-            { value: 'physical', label: 'Physically active work' },
-            { value: 'heavyManual', label: 'Heavy manual labor' },
-          ]}
-          onChange={(job) => setActivity({ job })}
-        />
+        <div className="select-wrap">
+          <select
+            className="glass-select"
+            aria-label="Job activity"
+            value={activity.job}
+            onChange={(e) =>
+              setActivity({ job: e.target.value as typeof activity.job })
+            }
+          >
+            <option value="seated">Mostly seated (desk job or student)</option>
+            <option value="seatedWithMovement">
+              Seated, but often up and about
+            </option>
+            <option value="standing">On my feet most of the day</option>
+            <option value="physical">Physically active work</option>
+            <option value="heavyManual">Heavy manual labor</option>
+          </select>
+          <span className="select-chevron" aria-hidden>
+            ▾
+          </span>
+        </div>
       </div>
 
       <div className="field">

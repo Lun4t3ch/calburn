@@ -655,7 +655,7 @@ input[type='range'] {
   position: relative;
 }
 
-.goal-select {
+.glass-select {
   width: 100%;
   appearance: none;
   -webkit-appearance: none;
@@ -670,7 +670,7 @@ input[type='range'] {
   cursor: pointer;
 }
 
-.goal-select:hover {
+.glass-select:hover {
   border-color: var(--color-primary);
 }
 

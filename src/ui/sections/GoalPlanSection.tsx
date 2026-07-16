@@ -110,7 +110,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
         <span className="field-label">Goal</span>
         <div className="select-wrap">
           <select
-            className="goal-select"
+            className="glass-select"
             aria-label="Goal"
             value={goal}
             onChange={(e) => setGoal(e.target.value as typeof goal)}
