@@ -3,6 +3,7 @@ import { ProfileSection } from './ui/sections/ProfileSection'
 import { ActivitySection } from './ui/sections/ActivitySection'
 import { AdvancedSection } from './ui/sections/AdvancedSection'
 import { ResultsSection } from './ui/sections/ResultsSection'
+import { GoalPlanSection } from './ui/sections/GoalPlanSection'
 import { energyBreakdown } from './domain/tdee'
 import { useAppStore } from './state/store'
 
@@ -18,17 +19,29 @@ function App() {
   // Advanced-only inputs stay saved when switching to easy mode, but only
   // apply in advanced mode — easy mode gives the simple estimate.
   const advanced = mode === 'advanced'
+  const effProfile = advanced ? profile : { ...profile, bodyFatPct: undefined }
+  const effActivity = advanced
+    ? activity
+    : {
+        ...activity,
+        stepsPerDay: undefined,
+        exerciseKcalPerDayOverride: undefined,
+      }
+  const effMacros = advanced ? macros : undefined
+
   const energy = energyBreakdown({
-    profile: advanced ? profile : { ...profile, bodyFatPct: undefined },
-    activity: advanced
-      ? activity
-      : {
-          ...activity,
-          stepsPerDay: undefined,
-          exerciseKcalPerDayOverride: undefined,
-        },
-    macros: advanced ? macros : undefined,
+    profile: effProfile,
+    activity: effActivity,
+    macros: effMacros,
   })
+
+  // Maintenance as a function of bodyweight — drives the adaptive projection.
+  const tdeeAt = (weightKg: number) =>
+    energyBreakdown({
+      profile: { ...effProfile, weightKg },
+      activity: effActivity,
+      macros: effMacros,
+    }).total.value
 
   return (
     <div className="app-shell">
@@ -66,6 +79,7 @@ function App() {
         <ActivitySection />
         {advanced && <AdvancedSection />}
         <ResultsSection energy={energy} />
+        <GoalPlanSection energy={energy} profile={effProfile} tdeeAt={tdeeAt} />
       </main>
 
       <footer className="app-footer">

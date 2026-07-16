@@ -8,6 +8,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type {
   ActivityInputs,
+  GoalId,
   MacroIntake,
   Profile,
   UnitSystem,
@@ -22,6 +23,9 @@ export interface AppState {
   macros?: MacroIntake
   unitSystem: UnitSystem
   mode: Mode
+  goal: GoalId
+  /** Optional: what the user estimates they currently eat (kcal/day). */
+  currentIntakeKcal?: number
   tipsEnabled: boolean
   dismissedTips: string[]
 
@@ -30,6 +34,8 @@ export interface AppState {
   setMacros: (macros: MacroIntake | undefined) => void
   setUnitSystem: (unitSystem: UnitSystem) => void
   setMode: (mode: Mode) => void
+  setGoal: (goal: GoalId) => void
+  setCurrentIntakeKcal: (kcal: number | undefined) => void
   setTipsEnabled: (enabled: boolean) => void
   dismissTip: (id: string) => void
 }
@@ -55,6 +61,8 @@ export const useAppStore = create<AppState>()(
       macros: undefined,
       unitSystem: 'metric',
       mode: 'easy',
+      goal: 'maintain',
+      currentIntakeKcal: undefined,
       tipsEnabled: true,
       dismissedTips: [],
 
@@ -65,6 +73,8 @@ export const useAppStore = create<AppState>()(
       setMacros: (macros) => set({ macros }),
       setUnitSystem: (unitSystem) => set({ unitSystem }),
       setMode: (mode) => set({ mode }),
+      setGoal: (goal) => set({ goal }),
+      setCurrentIntakeKcal: (currentIntakeKcal) => set({ currentIntakeKcal }),
       setTipsEnabled: (tipsEnabled) => set({ tipsEnabled }),
       dismissTip: (id) =>
         set((s) => ({
