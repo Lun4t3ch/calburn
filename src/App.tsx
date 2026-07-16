@@ -40,7 +40,9 @@ function App() {
       <header className="app-header">
         <div className="app-header-top">
           <h1>
-            <span aria-hidden="true">🔥</span> CalBurn
+            <span aria-hidden="true">🔥</span>{' '}
+            <span className="brand-cal">Cal</span>
+            <span className="brand-burn">Burn</span>
           </h1>
           <div className="app-header-controls">
             <Segmented

@@ -23,8 +23,15 @@ const SLOT_ORDER: MealSlot[] = ['breakfast', 'lunch', 'dinner', 'snack']
  * Greedily fill a day: one breakfast, one lunch, one dinner (as budget
  * allows), then snacks — repeating snacks until the target is reached
  * within half of the smallest snack's calories.
+ *
+ * `variant` rotates which meal is picked per slot, so users can cycle
+ * through several different example days for the same calorie target.
  */
-export function buildExampleDay(targetKcal: number, style: FoodStyle): ExampleDay {
+export function buildExampleDay(
+  targetKcal: number,
+  style: FoodStyle,
+  variant = 0,
+): ExampleDay {
   const pool = FOODS.filter((f) => f.style === style)
   const items: DayFoodItem[] = []
   let total = 0
@@ -36,13 +43,13 @@ export function buildExampleDay(targetKcal: number, style: FoodStyle): ExampleDa
     total += food.kcal
   }
 
-  // Main meals: pick the largest option per slot that still fits.
+  // Main meals: rotate through the options per slot that still fit.
   for (const slot of SLOT_ORDER.slice(0, 3)) {
-    const options = pool
+    const fitting = pool
       .filter((f) => f.slot === slot)
       .sort((a, b) => b.kcal - a.kcal)
-    const fitting = options.find((f) => total + f.kcal <= targetKcal)
-    if (fitting) add(fitting)
+      .filter((f) => total + f.kcal <= targetKcal)
+    if (fitting.length > 0) add(fitting[variant % fitting.length])
   }
 
   // Snacks: keep adding the biggest snack that fits.
@@ -59,13 +66,16 @@ export function buildExampleDay(targetKcal: number, style: FoodStyle): ExampleDa
   return { style, items, totalKcal: total }
 }
 
-/** Both example days for a target. */
-export function exampleDays(targetKcal: number): {
+/** Both example days for a target; `variant` cycles alternatives. */
+export function exampleDays(
+  targetKcal: number,
+  variant = 0,
+): {
   best: ExampleDay
   worst: ExampleDay
 } {
   return {
-    best: buildExampleDay(targetKcal, 'healthy'),
-    worst: buildExampleDay(targetKcal, 'indulgent'),
+    best: buildExampleDay(targetKcal, 'healthy', variant),
+    worst: buildExampleDay(targetKcal, 'indulgent', variant),
   }
 }

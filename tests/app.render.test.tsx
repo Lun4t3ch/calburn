@@ -11,7 +11,9 @@ afterEach(() => {
 describe('<App /> end-to-end render', () => {
   it('mounts and shows the brand and a burn estimate', () => {
     render(<App />)
-    expect(screen.getByText('CalBurn')).toBeTruthy()
+    // Two-tone wordmark: "Cal" + "Burn"
+    expect(screen.getByText('Cal')).toBeTruthy()
+    expect(screen.getByText('Burn')).toBeTruthy()
     // The results total renders a kcal figure
     expect(screen.getAllByText(/kcal/i).length).toBeGreaterThan(0)
   })

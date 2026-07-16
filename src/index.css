@@ -22,9 +22,13 @@
   --color-bg: #e9ece6;
   --bg-image: url('/bg-light.svg');
 
+  /* Brand wordmark */
+  --color-brand-cal: var(--color-primary-strong);
+  --color-brand-burn: #0284c7; /* light-blue companion to the teal */
+
   /* Glass surfaces — translucent enough to show the scene, frosted enough
      to keep every word readable */
-  --glass-surface: rgba(255, 255, 255, 0.52);
+  --glass-surface: rgba(255, 255, 255, 0.38);
   --glass-sheen: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.45),
@@ -77,7 +81,9 @@
   --color-bg: #100e0d;
   --bg-image: url('/bg-dark.svg');
 
-  --glass-surface: rgba(24, 21, 19, 0.58);
+  --color-brand-burn: #7dd3fc; /* sky-300 on dark */
+
+  --glass-surface: rgba(24, 21, 19, 0.42);
   --glass-sheen: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1),
@@ -176,8 +182,15 @@ body::before {
 .app-header h1 {
   margin: 0.25rem 0 0;
   font-size: 1.6rem;
-  color: var(--color-primary-strong);
   letter-spacing: -0.01em;
+}
+
+.brand-cal {
+  color: var(--color-brand-cal);
+}
+
+.brand-burn {
+  color: var(--color-brand-burn);
 }
 
 .app-header-controls {
@@ -798,10 +811,59 @@ input[type='range'] {
   color: var(--color-text-muted);
 }
 
+.food-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 1px solid var(--color-inset-border);
+  background: var(--color-inset);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  text-align: left;
+}
+
+.food-toggle:hover {
+  border-color: var(--color-primary);
+}
+
+.food-toggle-chevron {
+  margin-left: auto;
+  color: var(--color-text-muted);
+}
+
+.food-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.food-next {
+  border: 1px solid var(--color-inset-border);
+  background: var(--color-inset);
+  color: var(--color-primary-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.food-next:hover {
+  border-color: var(--color-primary);
+}
+
 .food-days {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+  margin-top: 0.6rem;
 }
 
 @media (max-width: 560px) {
@@ -976,7 +1038,16 @@ input[type='range'] {
   font-style: italic;
 }
 
-.insight-tip-close {
+.insight-tip-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.insight-tip-close,
+.insight-tip-next {
   border: none;
   background: transparent;
   color: var(--color-text-muted);
@@ -984,11 +1055,38 @@ input[type='range'] {
   cursor: pointer;
   padding: 0.1rem 0.25rem;
   line-height: 1;
-  flex-shrink: 0;
 }
 
-.insight-tip-close:hover {
+.insight-tip-next {
+  font-size: 1rem;
+}
+
+.insight-tip-close:hover,
+.insight-tip-next:hover {
   color: var(--color-text);
+}
+
+.insight-tip-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tip-action {
+  border: 1px solid var(--color-inset-border);
+  background: var(--color-inset);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.tip-action-strong {
+  border-color: var(--color-primary);
+  color: var(--color-primary-strong);
 }
 
 /* ---------- Settings bar ---------- */

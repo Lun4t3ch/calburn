@@ -70,10 +70,11 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
   })
   const projected = points[points.length - 1]
   const totalChangeKg = projected.weightKg - profile.weightKg
-  const equilibriumKg = equilibriumWeightKg(profile.weightKg, plan.targetKcal, tdeeAt)
 
   const macros = macroTargets(plan.targetKcal, profile.weightKg, goal)
-  const days = exampleDays(plan.targetKcal)
+  const [foodOpen, setFoodOpen] = useState(false)
+  const [foodVariant, setFoodVariant] = useState(0)
+  const days = exampleDays(plan.targetKcal, foodVariant)
 
   return (
     <Card
@@ -150,8 +151,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
             {formatWeightDelta(totalChangeKg, unitSystem)}). The curve bends
             because a {totalChangeKg < 0 ? 'lighter' : 'heavier'} body burns{' '}
             {totalChangeKg < 0 ? 'fewer' : 'more'} calories — that's why
-            plateaus are normal, not failure. Long-term, this intake settles
-            near {formatWeight(equilibriumKg, unitSystem)}.
+            plateaus are normal, not failure.
           </p>
         </>
       )}
@@ -181,18 +181,49 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
       </div>
 
       <div className="field">
-        <span className="field-label">
-          What {Math.round(plan.targetKcal).toLocaleString('en-US')} kcal can
-          look like
-        </span>
-        <div className="food-days">
-          <FoodDay day={days.best} title="Whole foods — a full day" emoji="🥗" />
-          <FoodDay day={days.worst} title="Fast food — gone fast" emoji="🍔" />
-        </div>
-        <p className="helper-text">
-          Same calories — very different amounts of food. That's why food
-          choice matters more than willpower.
-        </p>
+        <button
+          type="button"
+          className="food-toggle"
+          aria-expanded={foodOpen}
+          onClick={() => setFoodOpen(!foodOpen)}
+        >
+          <span aria-hidden>🍽️</span> What{' '}
+          {Math.round(plan.targetKcal).toLocaleString('en-US')} kcal can look
+          like
+          <span className="food-toggle-chevron" aria-hidden>
+            {foodOpen ? '▴' : '▾'}
+          </span>
+        </button>
+        {foodOpen && (
+          <>
+            <div className="food-days">
+              <FoodDay
+                day={days.best}
+                title="Whole foods — a full day"
+                emoji="🥗"
+              />
+              <FoodDay
+                day={days.worst}
+                title="Fast food — gone fast"
+                emoji="🍔"
+              />
+            </div>
+            <div className="food-actions">
+              <button
+                type="button"
+                className="food-next"
+                onClick={() => setFoodVariant((v) => v + 1)}
+                aria-label="Show another example"
+              >
+                More examples →
+              </button>
+            </div>
+            <p className="helper-text">
+              Same calories — very different amounts of food. That's why food
+              choice matters more than willpower.
+            </p>
+          </>
+        )}
       </div>
 
       <OptionalBlock
