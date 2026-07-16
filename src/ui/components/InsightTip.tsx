@@ -63,7 +63,11 @@ export function InsightTip({ anchor, rotation = 0 }: InsightTipProps) {
   const available = insightsFor(anchor, dismissedTips)
   if (available.length === 0) return null
 
-  const tip = available[(rotation + offset) % available.length]
+  // Safe modulo: rotation can be negative (e.g. findIndex returning -1).
+  const index =
+    (((rotation + offset) % available.length) + available.length) %
+    available.length
+  const tip = available[index]
 
   return (
     <aside className={`insight-tip${tip.motivational ? ' insight-tip-motivation' : ''}`}>
