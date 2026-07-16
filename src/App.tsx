@@ -1,6 +1,7 @@
 import { Segmented } from './ui/components/Segmented'
 import { ProfileSection } from './ui/sections/ProfileSection'
 import { ActivitySection } from './ui/sections/ActivitySection'
+import { AdvancedSection } from './ui/sections/AdvancedSection'
 import { ResultsSection } from './ui/sections/ResultsSection'
 import { energyBreakdown } from './domain/tdee'
 import { useAppStore } from './state/store'
@@ -14,10 +15,19 @@ function App() {
   const setMode = useAppStore((s) => s.setMode)
   const setUnitSystem = useAppStore((s) => s.setUnitSystem)
 
+  // Advanced-only inputs stay saved when switching to easy mode, but only
+  // apply in advanced mode — easy mode gives the simple estimate.
+  const advanced = mode === 'advanced'
   const energy = energyBreakdown({
-    profile,
-    activity,
-    macros: mode === 'advanced' ? macros : undefined,
+    profile: advanced ? profile : { ...profile, bodyFatPct: undefined },
+    activity: advanced
+      ? activity
+      : {
+          ...activity,
+          stepsPerDay: undefined,
+          exerciseKcalPerDayOverride: undefined,
+        },
+    macros: advanced ? macros : undefined,
   })
 
   return (
@@ -54,6 +64,7 @@ function App() {
       <main className="app-main">
         <ProfileSection />
         <ActivitySection />
+        {advanced && <AdvancedSection />}
         <ResultsSection energy={energy} />
       </main>
 
