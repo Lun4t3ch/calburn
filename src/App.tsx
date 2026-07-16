@@ -87,10 +87,26 @@ function App() {
       </main>
 
       <footer className="app-footer">
+        <p className="footer-badges">
+          <span className="footer-badge">🔬 Evidence-based</span>
+          <span className="footer-badge">🔒 100% private</span>
+          <span className="footer-badge">📴 Works offline</span>
+        </p>
         <p>
-          Estimates use established scientific methods (Mifflin-St Jeor,
-          Compendium of Physical Activities). They're a best possible guess —
-          not exact science. Nothing you enter leaves your browser.
+          CalBurn uses established scientific methods — Mifflin-St Jeor and
+          Katch-McArdle for resting burn, the Compendium of Physical Activities
+          for movement, and a dynamic model (à la the NIH Body Weight Planner)
+          for weight projection. These are the best possible estimates, not
+          exact science: individual metabolism varies by ±10% or more, so treat
+          every number as a starting point and let your real-world trend fine-tune
+          it.
+        </p>
+        <p>
+          Everything is calculated in your browser and saved only on this
+          device — nothing you enter is ever sent anywhere. CalBurn is an
+          educational tool, not medical advice; check with a doctor or dietitian
+          before big changes, especially if you're pregnant, under 18, or have a
+          health condition.
         </p>
       </footer>
     </div>

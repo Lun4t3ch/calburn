@@ -22,6 +22,5 @@ export function formatHeight(cm: number, units: UnitSystem): string {
 export function formatWeightDelta(kg: number, units: UnitSystem): string {
   const value = units === 'metric' ? kg : kgToLb(kg)
   const unit = units === 'metric' ? 'kg' : 'lb'
-  const rounded = Math.abs(value) < 1 ? value.toFixed(1) : value.toFixed(1)
-  return `${kg > 0 ? '+' : ''}${rounded} ${unit}`
+  return `${kg > 0 ? '+' : ''}${value.toFixed(1)} ${unit}`
 }
