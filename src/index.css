@@ -469,11 +469,108 @@ body::before {
   font-variant-numeric: tabular-nums;
 }
 
+/* Touch-friendly sliders: 44px hit area, ~28px thumb, filled track.
+   touch-action: pan-y lets vertical swipes still scroll the page while
+   horizontal drags go to the slider (kills the "sticky" feel). */
 input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  accent-color: var(--color-primary);
-  height: 28px; /* comfortable touch target */
+  height: 44px;
   margin: 0;
+  background: transparent;
+  touch-action: pan-y;
+  cursor: pointer;
+  --track: rgba(28, 25, 23, 0.15);
+}
+
+:root[data-theme='dark'] input[type='range'] {
+  --track: rgba(255, 255, 255, 0.18);
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    var(--color-primary) var(--pct, 50%),
+    var(--track) var(--pct, 50%)
+  );
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+
+input[type='range']::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--track);
+}
+
+input[type='range']::-moz-range-progress {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-primary);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+
+.input-slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-slider-controls input[type='range'] {
+  flex: 1;
+  min-width: 0;
+}
+
+.stepper-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-inset-border);
+  background: var(--color-inset);
+  color: var(--color-primary-strong);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.stepper-btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+}
+
+.stepper-btn:active:not(:disabled) {
+  background: var(--color-primary-soft);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 /* ---------- Workout picker ---------- */

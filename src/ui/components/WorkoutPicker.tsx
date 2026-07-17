@@ -22,6 +22,10 @@ const GROUP_LABELS: Record<string, string> = {
 
 const GROUPS = [...new Set(MET_ACTIVITIES.map((a) => a.group))]
 
+/** Track-fill percentage for the styled slider. */
+const pct = (value: number, min: number, max: number) =>
+  ({ '--pct': `${((value - min) / (max - min)) * 100}%` }) as React.CSSProperties
+
 export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
   const usedIds = new Set(workouts.map((w) => w.activityId))
   const firstUnused = MET_ACTIVITIES.find((a) => !usedIds.has(a.id))
@@ -81,6 +85,7 @@ export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
                     max={1500}
                     step={25}
                     value={w.kcalPerSession ?? 300}
+                    style={pct(w.kcalPerSession ?? 300, 50, 1500)}
                     onChange={(e) =>
                       update(i, { kcalPerSession: Number(e.target.value) })
                     }
@@ -95,6 +100,7 @@ export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
                     max={14}
                     step={1}
                     value={w.sessionsPerWeek ?? 3}
+                    style={pct(w.sessionsPerWeek ?? 3, 1, 14)}
                     onChange={(e) =>
                       update(i, { sessionsPerWeek: Number(e.target.value) })
                     }
@@ -118,6 +124,7 @@ export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
                   max={14}
                   step={0.5}
                   value={w.hoursPerWeek}
+                  style={pct(w.hoursPerWeek, 0.5, 14)}
                   onChange={(e) =>
                     update(i, { hoursPerWeek: Number(e.target.value) })
                   }

@@ -36,6 +36,18 @@ describe('<App /> end-to-end render', () => {
     expect(screen.getByText('Daily steps')).toBeTruthy()
   })
 
+  it('stepper buttons adjust slider values by one step', () => {
+    render(<App />)
+    // Default age is 35
+    expect(screen.getByText('35 years')).toBeTruthy()
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Increase Age' }))
+    fireEvent.pointerUp(screen.getByRole('button', { name: 'Increase Age' }))
+    expect(screen.getByText('36 years')).toBeTruthy()
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Decrease Age' }))
+    fireEvent.pointerUp(screen.getByRole('button', { name: 'Decrease Age' }))
+    expect(screen.getByText('35 years')).toBeTruthy()
+  })
+
   it('has a light/dark theme toggle', () => {
     render(<App />)
     const toggle = screen.getByRole('button', { name: /switch to (dark|light) mode/i })
