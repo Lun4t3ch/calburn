@@ -251,13 +251,14 @@ body::before {
 /* ---------- Glass cards ---------- */
 
 .card {
+  --card-pad: 1.25rem;
   background: var(--glass-sheen), var(--glass-surface);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 1.25rem;
+  padding: var(--card-pad);
 }
 
 .card-header h2 {
@@ -272,8 +273,34 @@ body::before {
   color: var(--color-text-muted);
 }
 
+/* Tinted band across the top of each card so the steps of the flow
+   stand out from the inputs and results beneath them */
 .card-header {
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-primary-soft);
+  margin: calc(var(--card-pad) * -1) calc(var(--card-pad) * -1) 1rem;
+  padding: 0.85rem var(--card-pad);
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  border-bottom: 1px solid var(--color-inset-border);
+}
+
+.card-step {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+:root[data-theme='dark'] .card-step {
+  color: #0c0a09;
 }
 
 /* ---------- Advanced expandable ---------- */
@@ -290,11 +317,19 @@ body::before {
   width: 100%;
   padding: 1rem 1.25rem;
   border: none;
-  background: transparent;
+  background: var(--color-primary-soft);
   font: inherit;
   color: inherit;
   text-align: left;
   cursor: pointer;
+}
+
+.advanced-card-open .advanced-header {
+  border-bottom: 1px solid var(--color-inset-border);
+}
+
+.advanced-body {
+  padding-top: 1rem;
 }
 
 .advanced-badge {
@@ -729,6 +764,7 @@ select option {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -1313,7 +1349,7 @@ select option {
   }
 
   .card {
-    padding: 1rem;
+    --card-pad: 1rem;
   }
 
   .advanced-card {

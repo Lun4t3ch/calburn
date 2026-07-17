@@ -14,6 +14,7 @@ export function ActivitySection() {
 
   return (
     <Card
+      step={2}
       title="How you move"
       subtitle="Everyday movement usually burns more than workouts do"
     >

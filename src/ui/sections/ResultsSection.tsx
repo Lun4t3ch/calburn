@@ -59,6 +59,7 @@ export function ResultsSection({ energy }: ResultsSectionProps) {
 
   return (
     <Card
+      step={4}
       title="Your burn"
       subtitle="Tap a color or card to see what each part means"
     >

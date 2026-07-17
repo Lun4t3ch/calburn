@@ -109,6 +109,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
 
   return (
     <Card
+      step={5}
       title="Your plan"
       subtitle="Pick a goal and see what to eat, and where it takes you"
     >

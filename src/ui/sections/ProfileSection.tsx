@@ -12,7 +12,7 @@ export function ProfileSection() {
   const setProfile = useAppStore((s) => s.setProfile)
 
   return (
-    <Card title="About you" subtitle="The basics that drive your resting burn">
+    <Card step={1} title="About you" subtitle="The basics that drive your resting burn">
       <div className="field">
         <span className="field-label">Sex</span>
         <Segmented

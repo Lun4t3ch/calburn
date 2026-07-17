@@ -54,6 +54,7 @@ export function AdvancedSection() {
         aria-expanded={advancedOpen}
         onClick={() => setAdvancedOpen(!advancedOpen)}
       >
+        <span className="card-step">3</span>
         <span className="advanced-badge">Advanced</span>
         <span className="advanced-titles">
           <span className="advanced-title">Optional advanced input</span>
