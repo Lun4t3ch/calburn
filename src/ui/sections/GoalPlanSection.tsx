@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react'
+import { BmiBand } from '../components/BmiBand'
 import { Card } from '../components/Card'
 import { InputSlider } from '../components/InputSlider'
 import { InsightTip } from '../components/InsightTip'
@@ -229,6 +230,17 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
           </p>
         </>
       )}
+
+      <div className="field">
+        <span className="field-label">Health context</span>
+        <BmiBand
+          weightNowKg={profile.weightKg}
+          weightFutureKg={projected.weightKg}
+          heightCm={profile.heightCm}
+          futureLabel={`${Math.round(horizon / 4.345)} mo`}
+          hasBodyFat={profile.bodyFatPct !== undefined}
+        />
+      </div>
 
       <div className="field">
         <span className="field-label">Daily macros to aim for</span>

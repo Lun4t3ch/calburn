@@ -993,6 +993,112 @@ select option {
   pointer-events: none;
 }
 
+/* ---------- BMI band ---------- */
+
+.bmi-block {
+  --bmi-under: #0284c7;
+  --bmi-healthy: #0d9488;
+  --bmi-over: #d97706;
+  --bmi-obese: #dc2626;
+}
+
+:root[data-theme='dark'] .bmi-block {
+  --bmi-under: #38bdf8;
+  --bmi-healthy: #2dd4bf;
+  --bmi-over: #fbbf24;
+  --bmi-obese: #f87171;
+}
+
+.bmi-summary {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.bmi-band-wrap {
+  position: relative;
+  padding: 1.3rem 0;
+}
+
+.bmi-band {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bmi-zone {
+  height: 100%;
+}
+
+.bmi-zone-under {
+  background: var(--bmi-under);
+  opacity: 0.55;
+}
+
+.bmi-zone-healthy {
+  background: var(--bmi-healthy);
+}
+
+.bmi-zone-over {
+  background: var(--bmi-over);
+  opacity: 0.8;
+}
+
+.bmi-zone-obese {
+  background: var(--bmi-obese);
+  opacity: 0.8;
+}
+
+.bmi-marker {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.bmi-marker-future {
+  top: -0.15rem;
+}
+
+.bmi-marker-now {
+  bottom: -0.15rem;
+}
+
+.bmi-marker-pin {
+  font-size: 0.55rem;
+  color: var(--color-text);
+}
+
+.bmi-marker-label {
+  margin: 0.1rem 0;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bmi-zone-labels {
+  display: flex;
+  gap: 2px;
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 0.1rem;
+}
+
+.bmi-zone-labels span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ---------- Macro tiles & food days ---------- */
 
 .macro-tiles {
