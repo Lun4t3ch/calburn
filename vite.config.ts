@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.png', 'apple-touch-icon.png', 'logo.png'],
       manifest: {
         name: 'CalBurn',
         short_name: 'CalBurn',
