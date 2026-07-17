@@ -231,7 +231,7 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
         </>
       )}
 
-      <div className="field">
+      <div className="field bmi-field">
         <span className="field-label">Health context</span>
         <BmiBand
           weightNowKg={profile.weightKg}

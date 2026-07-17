@@ -995,6 +995,10 @@ select option {
 
 /* ---------- BMI band ---------- */
 
+.bmi-field {
+  margin-top: 1.5rem;
+}
+
 .bmi-block {
   --bmi-under: #0284c7;
   --bmi-healthy: #0d9488;
