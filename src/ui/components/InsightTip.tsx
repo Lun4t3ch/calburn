@@ -8,6 +8,16 @@ import { useState } from 'react'
 import { insightsFor, type InsightAnchor } from '../../data/insights'
 import { useAppStore } from '../../state/store'
 
+/** Tiny category label so users see tips differ by section. */
+const ANCHOR_LABELS: Record<InsightAnchor, string> = {
+  profile: 'Basics tip',
+  activity: 'Movement tip',
+  advanced: 'Nutrition tip',
+  results: 'Metabolism tip',
+  plan: 'Weight-change tip',
+  motivation: 'Motivation',
+}
+
 interface InsightTipProps {
   anchor: InsightAnchor
   /** Rotates which tip shows when more than one is available. */
@@ -76,6 +86,7 @@ export function InsightTip({ anchor, rotation = 0 }: InsightTipProps) {
           {tip.motivational ? '💚' : '💡'}
         </span>
         <div>
+          <span className="insight-tip-tag">{ANCHOR_LABELS[anchor]}</span>
           <p className="insight-tip-text">{tip.text}</p>
           <p className="insight-tip-source">{tip.source}</p>
         </div>

@@ -4,6 +4,7 @@
 import { MET_ACTIVITIES } from '../../data/met-values'
 import { CUSTOM_WORKOUT_ID } from '../../domain/activity'
 import type { Workout } from '../../domain/types'
+import { InputSlider } from './InputSlider'
 
 interface WorkoutPickerProps {
   workouts: Workout[]
@@ -21,10 +22,6 @@ const GROUP_LABELS: Record<string, string> = {
 }
 
 const GROUPS = [...new Set(MET_ACTIVITIES.map((a) => a.group))]
-
-/** Track-fill percentage for the styled slider. */
-const pct = (value: number, min: number, max: number) =>
-  ({ '--pct': `${((value - min) / (max - min)) * 100}%` }) as React.CSSProperties
 
 export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
   const usedIds = new Set(workouts.map((w) => w.activityId))
@@ -75,65 +72,6 @@ export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
                 </option>
               </optgroup>
             </select>
-
-            {isCustom ? (
-              <>
-                <label className="workout-hours">
-                  <input
-                    type="range"
-                    min={50}
-                    max={1500}
-                    step={25}
-                    value={w.kcalPerSession ?? 300}
-                    style={pct(w.kcalPerSession ?? 300, 50, 1500)}
-                    onChange={(e) =>
-                      update(i, { kcalPerSession: Number(e.target.value) })
-                    }
-                    aria-label="Calories per workout"
-                  />
-                  <span>{w.kcalPerSession ?? 300} kcal/workout</span>
-                </label>
-                <label className="workout-hours">
-                  <input
-                    type="range"
-                    min={1}
-                    max={14}
-                    step={1}
-                    value={w.sessionsPerWeek ?? 3}
-                    style={pct(w.sessionsPerWeek ?? 3, 1, 14)}
-                    onChange={(e) =>
-                      update(i, { sessionsPerWeek: Number(e.target.value) })
-                    }
-                    aria-label="Workouts per week"
-                  />
-                  <span>{w.sessionsPerWeek ?? 3}× per week</span>
-                </label>
-                <p className="workout-custom-warning">
-                  ⚠️ Careful with device numbers: in a Stanford study, wrist
-                  trackers overstated calories burned by 27% to 93% depending
-                  on the device (Shcherbina et al. 2017, J Pers Med). Entering
-                  a bit less than your watch shows is usually closer to the
-                  truth.
-                </p>
-              </>
-            ) : (
-              <label className="workout-hours">
-                <input
-                  type="range"
-                  min={0.5}
-                  max={14}
-                  step={0.5}
-                  value={w.hoursPerWeek}
-                  style={pct(w.hoursPerWeek, 0.5, 14)}
-                  onChange={(e) =>
-                    update(i, { hoursPerWeek: Number(e.target.value) })
-                  }
-                  aria-label="Hours per week"
-                />
-                <span>{w.hoursPerWeek} h/week</span>
-              </label>
-            )}
-
             <button
               type="button"
               className="workout-remove"
@@ -142,6 +80,48 @@ export function WorkoutPicker({ workouts, onChange }: WorkoutPickerProps) {
             >
               ✕
             </button>
+
+            {isCustom ? (
+              <div className="workout-sliders">
+                <InputSlider
+                  label="Calories per workout"
+                  display={`${w.kcalPerSession ?? 300} kcal`}
+                  value={w.kcalPerSession ?? 300}
+                  min={50}
+                  max={1500}
+                  step={25}
+                  onChange={(kcalPerSession) => update(i, { kcalPerSession })}
+                />
+                <InputSlider
+                  label="Workouts per week"
+                  display={`${w.sessionsPerWeek ?? 3}× per week`}
+                  value={w.sessionsPerWeek ?? 3}
+                  min={1}
+                  max={14}
+                  step={1}
+                  onChange={(sessionsPerWeek) => update(i, { sessionsPerWeek })}
+                />
+                <p className="workout-custom-warning">
+                  ⚠️ Careful with device numbers: in a Stanford study, wrist
+                  trackers overstated calories burned by 27% to 93% depending
+                  on the device (Shcherbina et al. 2017, J Pers Med). Entering
+                  a bit less than your watch shows is usually closer to the
+                  truth.
+                </p>
+              </div>
+            ) : (
+              <div className="workout-sliders">
+                <InputSlider
+                  label="Hours per week"
+                  display={`${w.hoursPerWeek.toFixed(1)} h/week`}
+                  value={w.hoursPerWeek}
+                  min={0.5}
+                  max={14}
+                  step={0.5}
+                  onChange={(hoursPerWeek) => update(i, { hoursPerWeek })}
+                />
+              </div>
+            )}
           </div>
         )
       })}
