@@ -54,6 +54,10 @@ export function ActivitySection() {
           ]}
           onChange={(leisure) => setActivity({ leisure })}
         />
+        <p className="helper-text">
+          Know your exact daily steps? You can enter them under "Optional
+          advanced input" below, they'll replace this rough estimate.
+        </p>
       </div>
 
       <div className="field">
