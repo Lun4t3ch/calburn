@@ -38,7 +38,7 @@ Backend: None (all calculations in-browser)
 
 Database: None (localStorage persistence)
 
-Hosting: Local dev only for now (static hosting later)
+Hosting: GitHub Pages, https://lun4t3ch.github.io/calburn/ (repo github.com/Lun4t3ch/calburn, auto-deploy on push to main). Custom domain possible later via CALBURN_BASE=/ and a CNAME.
 
 Authentication: None
 
