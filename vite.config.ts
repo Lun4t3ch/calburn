@@ -2,7 +2,12 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// GitHub Pages serves the app under /calburn/. When a custom domain is
+// attached later, set CALBURN_BASE=/ in the build environment.
+const base = process.env.CALBURN_BASE ?? '/calburn/'
+
 export default defineConfig({
+  base,
   plugins: [
     react(),
     VitePWA({
@@ -16,7 +21,8 @@ export default defineConfig({
         theme_color: '#0d9488',
         background_color: '#fafaf7',
         display: 'standalone',
-        start_url: '/',
+        start_url: base,
+        scope: base,
         icons: [
           {
             src: 'icon-192.png',

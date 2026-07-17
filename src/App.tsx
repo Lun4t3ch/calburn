@@ -11,6 +11,7 @@ import { NextStepsSection } from './ui/sections/NextStepsSection'
 import { energyBreakdown } from './domain/tdee'
 import { mifflinStJeor } from './domain/bmr'
 import { useAppStore } from './state/store'
+import logoUrl from './assets/logo.png'
 
 function App() {
   const profile = useAppStore((s) => s.profile)
@@ -54,7 +55,7 @@ function App() {
       <header className="app-header">
         <div className="app-header-top">
           <h1>
-            <img className="brand-logo" src="/logo.png" alt="" aria-hidden="true" />
+            <img className="brand-logo" src={logoUrl} alt="" aria-hidden="true" />
             <span className="brand-word">
               <span className="brand-cal">Cal</span>
               <span className="brand-burn">Burn</span>

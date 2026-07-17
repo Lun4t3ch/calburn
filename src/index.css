@@ -18,9 +18,10 @@
   --color-tef: #7c3aed;
   --color-eat: #d97706;
 
-  /* Backdrop artwork, soft botanical scene the glass frosts over */
+  /* Backdrop artwork, soft botanical scene the glass frosts over.
+     Relative urls so Vite rebases them under any deploy base path. */
   --color-bg: #e9ece6;
-  --bg-image: url('/bg-light.svg');
+  --bg-image: url('./assets/bg-light.svg');
 
   /* Brand wordmark */
   --color-brand-cal: var(--color-primary-strong);
@@ -82,7 +83,7 @@
   --color-eat: #d97706;
 
   --color-bg: #100e0d;
-  --bg-image: url('/bg-dark.svg');
+  --bg-image: url('./assets/bg-dark.svg');
 
   --color-brand-burn: #7dd3fc; /* sky-300 on dark */
 
