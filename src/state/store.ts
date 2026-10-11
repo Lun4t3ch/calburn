@@ -6,6 +6,7 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { GOAL_PRESETS } from '../domain/goals'
 import type {
   ActivityInputs,
   GoalId,
@@ -109,6 +110,23 @@ export const useAppStore = create<AppState>()(
         })),
       resetDismissedTips: () => set({ dismissedTips: [] }),
     }),
-    { name: 'calburn' },
+    {
+      name: 'calburn',
+      // Bump on any change to the persisted shape, and handle the old
+      // version in migrate so returning users keep their data.
+      version: 1,
+      // v0 (unversioned) has the same shape as v1.
+      migrate: (persisted) => persisted as AppState,
+      // Never let stale or hand-edited storage crash the app.
+      merge: (persisted, current) => {
+        const merged = { ...current, ...(persisted as Partial<AppState>) }
+        if (!isValidGoal(merged.goal)) merged.goal = current.goal
+        return merged
+      },
+    },
   ),
 )
+
+function isValidGoal(goal: unknown): goal is GoalId {
+  return goal === 'custom' || GOAL_PRESETS.some((g) => g.id === goal)
+}

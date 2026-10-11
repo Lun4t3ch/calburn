@@ -8,7 +8,7 @@
  */
 
 import { KCAL_PER_GRAM } from './tef'
-import type { GoalId, MacroSplit } from './types'
+import type { GoalId, MacroSplit, Profile, Sex } from './types'
 
 export interface MacroTargets {
   proteinG: number
@@ -37,14 +37,40 @@ function proteinPerKgForGoal(goal: GoalId): number {
 const MIN_FAT_FRACTION = 0.2
 const MIN_FAT_G_PER_KG = 0.5
 
-/** Compute macro gram targets for a calorie target and goal. */
+/** Body fat % at or below which a high BMI is taken to mean muscle, not fat. */
+const LEAN_BODY_FAT_PCT: Record<Sex, number> = { male: 20, female: 30 }
+
+/**
+ * Bodyweight to dose protein against. Above BMI 25, g/kg targets on total
+ * weight overshoot (they were studied in lean athletes), so protein is
+ * dosed to the weight at BMI 25 instead, unless a body fat % in the lean
+ * range says the extra weight is muscle.
+ */
+export function proteinReferenceWeightKg(
+  profile: Pick<Profile, 'sex' | 'weightKg' | 'heightCm' | 'bodyFatPct'>,
+): number {
+  const { sex, weightKg, heightCm, bodyFatPct } = profile
+  const m = heightCm / 100
+  const bmi25WeightKg = 25 * m * m
+  if (weightKg <= bmi25WeightKg) return weightKg
+  if (bodyFatPct !== undefined && bodyFatPct <= LEAN_BODY_FAT_PCT[sex]) {
+    return weightKg
+  }
+  return bmi25WeightKg
+}
+
+/**
+ * Compute macro gram targets for a calorie target and goal.
+ * `proteinWeightKg` (see proteinReferenceWeightKg) defaults to bodyweight.
+ */
 export function macroTargets(
   targetKcal: number,
   weightKg: number,
   goal: GoalId,
+  proteinWeightKg = weightKg,
 ): MacroTargets {
   const proteinPerKg = proteinPerKgForGoal(goal)
-  let proteinG = proteinPerKg * weightKg
+  let proteinG = proteinPerKg * proteinWeightKg
 
   const fatG = Math.max(
     (targetKcal * MIN_FAT_FRACTION) / KCAL_PER_GRAM.fat,

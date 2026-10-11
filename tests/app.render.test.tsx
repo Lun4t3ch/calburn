@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import App from '../src/App'
+import { useAppStore } from '../src/state/store'
 
 afterEach(() => {
   cleanup()
@@ -102,5 +103,38 @@ describe('<App /> end-to-end render', () => {
     expect(screen.getAllByLabelText('Dismiss this tip').length).toBeGreaterThan(0)
     fireEvent.click(showTips)
     expect(screen.queryAllByLabelText('Dismiss this tip').length).toBe(0)
+  })
+
+  it('hold-to-repeat stops at the bound even without pointerup', () => {
+    vi.useFakeTimers()
+    try {
+      render(<App />)
+      fireEvent.change(screen.getByRole('slider', { name: 'Age' }), {
+        target: { value: 88 },
+      })
+      // Hold +, then never release (a disabled button may not get pointerup)
+      fireEvent.pointerDown(screen.getByRole('button', { name: 'Increase Age' }))
+      act(() => vi.advanceTimersByTime(2000))
+      expect(screen.getByText('90 years')).toBeTruthy()
+      // Moving the slider afterwards must not be pulled back to the bound
+      fireEvent.change(screen.getByRole('slider', { name: 'Age' }), {
+        target: { value: 50 },
+      })
+      act(() => vi.advanceTimersByTime(2000))
+      expect(screen.getByText('50 years')).toBeTruthy()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('recovers from an unknown goal in stored data', async () => {
+    localStorage.setItem(
+      'calburn',
+      JSON.stringify({ state: { goal: 'removedGoal' }, version: 0 }),
+    )
+    await useAppStore.persist.rehydrate()
+    expect(useAppStore.getState().goal).not.toBe('removedGoal')
+    render(<App />)
+    expect(screen.getByText('Your plan')).toBeTruthy()
   })
 })

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   macroTargets,
   macroTargetsFromSplit,
+  proteinReferenceWeightKg,
   rebalanceSplit,
 } from '../src/domain/macros'
 
@@ -41,6 +42,36 @@ describe('macroTargets', () => {
 
   it('custom goal uses the maintenance protein default', () => {
     expect(macroTargets(2400, 80, 'custom').proteinPerKg).toBe(1.6)
+  })
+})
+
+describe('proteinReferenceWeightKg', () => {
+  it('uses bodyweight up to BMI 25', () => {
+    expect(proteinReferenceWeightKg({ sex: 'male', weightKg: 75, heightCm: 180 })).toBe(75)
+  })
+
+  it('caps at the BMI 25 weight for higher BMIs', () => {
+    // 1.8² · 25 = 81 kg
+    const w = proteinReferenceWeightKg({ sex: 'male', weightKg: 150, heightCm: 180 })
+    expect(w).toBeCloseTo(81, 5)
+  })
+
+  it('keeps bodyweight when body fat says the extra weight is muscle', () => {
+    expect(
+      proteinReferenceWeightKg({ sex: 'male', weightKg: 100, heightCm: 180, bodyFatPct: 14 }),
+    ).toBe(100)
+  })
+
+  it('still caps when body fat is high', () => {
+    const w = proteinReferenceWeightKg({ sex: 'female', weightKg: 110, heightCm: 165, bodyFatPct: 42 })
+    expect(w).toBeCloseTo(25 * 1.65 * 1.65, 5)
+  })
+
+  it('gives sane macros for a 150 kg person cutting', () => {
+    const ref = proteinReferenceWeightKg({ sex: 'male', weightKg: 150, heightCm: 180 })
+    const t = macroTargets(2200, 150, 'moderateLoss', ref)
+    expect(t.proteinG).toBe(178) // 2.2 · 81
+    expect(t.carbsG).toBeGreaterThan(100)
   })
 })
 

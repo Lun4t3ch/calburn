@@ -33,17 +33,20 @@ export function InputSlider({
   const timerRef = useRef<number | undefined>(undefined)
   const delayRef = useRef<number | undefined>(undefined)
 
-  const nudge = (dir: 1 | -1) => {
-    const s = stateRef.current
-    const next = Math.min(s.max, Math.max(s.min, s.value + dir * s.step))
-    if (next !== s.value) s.onChange(next)
-  }
-
   const stopHold = () => {
     if (delayRef.current !== undefined) window.clearTimeout(delayRef.current)
     if (timerRef.current !== undefined) window.clearInterval(timerRef.current)
     delayRef.current = undefined
     timerRef.current = undefined
+  }
+
+  const nudge = (dir: 1 | -1) => {
+    const s = stateRef.current
+    const next = Math.min(s.max, Math.max(s.min, s.value + dir * s.step))
+    if (next !== s.value) s.onChange(next)
+    // The button disables at a bound, and disabled buttons may never get
+    // pointerup, so stop repeating here rather than rely on it.
+    if (next <= s.min || next >= s.max) stopHold()
   }
 
   const startHold = (dir: 1 | -1) => {

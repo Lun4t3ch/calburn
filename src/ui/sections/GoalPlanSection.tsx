@@ -23,6 +23,7 @@ import {
   DEFAULT_SPLIT,
   macroTargets,
   macroTargetsFromSplit,
+  proteinReferenceWeightKg,
   rebalanceSplit,
 } from '../../domain/macros'
 import { equilibriumWeightKg, projectWeight } from '../../domain/projection'
@@ -98,9 +99,10 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
         ? 'moderateGain'
         : 'maintain'
     : goal
+  const proteinWeightKg = proteinReferenceWeightKg(profile)
   const macros = macroSplit
     ? macroTargetsFromSplit(plan.targetKcal, profile.weightKg, macroSplit)
-    : macroTargets(plan.targetKcal, profile.weightKg, macroGoal)
+    : macroTargets(plan.targetKcal, profile.weightKg, macroGoal, proteinWeightKg)
 
   const [foodOpen, setFoodOpen] = useState(false)
   const [foodVariant, setFoodVariant] = useState(0)
@@ -191,6 +193,15 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
               it is very hard to get the nutrients you need, so this should only
               be done under medical supervision.
             </>
+          ) : plan.maintenanceBelowFloor ? (
+            <>
+              ⚠️ Your estimated burn is already below the recommended minimum
+              of {CALORIE_FLOOR[profile.sex].toLocaleString('en-US')} kcal for{' '}
+              {profile.sex === 'female' ? 'women' : 'men'}, so we can't safely
+              plan a deficit. The target stays at your burn. Moving more is the
+              safer lever here, or ask a doctor or dietitian for a supervised
+              plan.
+            </>
           ) : (
             <>
               ⚠️ We raised this target to{' '}
@@ -267,7 +278,10 @@ export function GoalPlanSection({ energy, profile, tdeeAt }: GoalPlanSectionProp
             </>
           ) : (
             <>
-              Protein set at {macros.proteinPerKg} g per kg bodyweight,{' '}
+              Protein set at {macros.proteinPerKg} g per kg{' '}
+              {proteinWeightKg < profile.weightKg
+                ? `of a healthy-range reference weight (${formatWeight(proteinWeightKg, unitSystem)}), since g/kg targets overshoot at higher bodyweights;`
+                : 'bodyweight,'}{' '}
               {macroGoal.includes('Loss')
                 ? 'extra high while losing, to protect your muscle and keep you full.'
                 : 'enough to build and maintain muscle.'}

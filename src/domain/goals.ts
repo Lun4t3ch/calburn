@@ -91,6 +91,11 @@ export interface CaloriePlan {
   weeklyChangeKg: number
   /** True if the target was raised to the safe minimum. */
   floorApplied: boolean
+  /**
+   * True when maintenance itself sits below the safe minimum, so no deficit
+   * can be planned safely (the target is held at maintenance instead).
+   */
+  maintenanceBelowFloor: boolean
 }
 
 /** Turn a goal into a daily calorie plan. */
@@ -104,7 +109,13 @@ export function caloriePlan(
   const weeklyChangeKg = (preset.weeklyRatePct / 100) * weightKg
   const dailyDeltaKcal = (weeklyChangeKg * KCAL_PER_KG) / 7
 
-  const floor = CALORIE_FLOOR[sex]
+  // The floor may never push a loss/maintain goal into a surplus: when
+  // maintenance is already below it, maintenance becomes the floor.
+  const maintenanceBelowFloor = maintenanceKcal < CALORIE_FLOOR[sex]
+  const floor =
+    preset.weeklyRatePct <= 0
+      ? Math.min(CALORIE_FLOOR[sex], maintenanceKcal)
+      : CALORIE_FLOOR[sex]
   const rawTarget = maintenanceKcal + dailyDeltaKcal
   const floorApplied = rawTarget < floor
   const targetKcal = floorApplied ? floor : rawTarget
@@ -119,6 +130,7 @@ export function caloriePlan(
     dailyDeltaKcal: effectiveDelta,
     weeklyChangeKg: effectiveWeeklyKg,
     floorApplied,
+    maintenanceBelowFloor,
   }
 }
 
@@ -139,5 +151,6 @@ export function customCaloriePlan(
     dailyDeltaKcal,
     weeklyChangeKg: (dailyDeltaKcal * 7) / KCAL_PER_KG,
     floorApplied: targetKcal < CALORIE_FLOOR[sex],
+    maintenanceBelowFloor: maintenanceKcal < CALORIE_FLOOR[sex],
   }
 }

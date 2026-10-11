@@ -43,6 +43,28 @@ describe('caloriePlan', () => {
     expect(plan.targetKcal).toBe(CALORIE_FLOOR.male)
   })
 
+  it('never turns a loss goal into a surplus when burn is below the floor', () => {
+    // Small, older, sedentary woman: maintenance ≈ 1,170 < 1,200 floor
+    const plan = caloriePlan('aggressiveLoss', 1170, 50, 'female')
+    expect(plan.targetKcal).toBe(1170)
+    expect(plan.weeklyChangeKg).toBe(0)
+    expect(plan.floorApplied).toBe(true)
+    expect(plan.maintenanceBelowFloor).toBe(true)
+  })
+
+  it('maintain below the floor stays at maintenance, without a raise', () => {
+    const plan = caloriePlan('maintain', 1440, 55, 'male')
+    expect(plan.targetKcal).toBe(1440)
+    expect(plan.floorApplied).toBe(false)
+    expect(plan.maintenanceBelowFloor).toBe(true)
+  })
+
+  it('gain goals still respect the floor (and remain a surplus)', () => {
+    const plan = caloriePlan('leanGain', 1100, 50, 'female')
+    expect(plan.targetKcal).toBe(CALORIE_FLOOR.female)
+    expect(plan.weeklyChangeKg).toBeGreaterThan(0)
+  })
+
   it('presets are ordered from loss to gain', () => {
     const rates = GOAL_PRESETS.map((g) => g.weeklyRatePct)
     const sorted = [...rates].sort((a, b) => a - b)
